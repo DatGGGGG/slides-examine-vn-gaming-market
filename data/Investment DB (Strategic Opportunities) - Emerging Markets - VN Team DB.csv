@@ -1,0 +1,633 @@
+S/n,Date created,Studio type,Company Name,Company location,State/City,Founding Year,Founder(s) Background (Briefly),"#FTEs 
+(can fill in later)",Previous games developed (if any),"Game(s) under Development (Description e.g. platform, genre, etc.)",Tier,"Commentary (e.g. link to call notes, pitch deck, etc.)",Vid comments/interest,RP interest
+1,21/Aug/2025,"Indie
+Mid scale",Rare Reversee,VN,Ho Chi Minh,After 2019,"Founders: Khoa
+ - Organizational Structure: before working as game studio, they are mostly Production studio that focus on CGI (outsourced quite a few projects with AoV for Hero/Skin CGI on a frequent basic). Then by chance they help an indie who's struggling with their horro game, eventually leading to acquiring that group of talent and continue the game from then, which transformed them into a studio game that aim for more games in the future
+ - Direction: continue with their main strength as Production house, but that is to ensure their financial factor to make game for long term, especially PC game with high quality not only in term of visual, but also other elements of the game to make VN game more well-known
+ - Notable Products: The Scrouge ",Under 30,The Scrouge ,"The Scrouge 
+
+Genre: Classic horror narrative game
+Theme: Horror (mild)
+Topic: urban legend ghost story
+Status: Game launch, pending for DLC
+Review: Very positive so far
+Publisher: N/A
+Steam link & Demo: https://store.steampowered.com/app/2456350/The_Scourge__Tai_ng",1 / 2,N/A,,
+2,20/Aug/2025,Indie,IndieLab,VN,Ha Noi,After 2021,"Founders: Ngọc
+ - Organizational Structure: previously named as Tripple Brick Games with another Founder that shared resources and worked on their previous game - Legendary Hoplite. Now they change the name of the Studio into Indielab. Most of their staff work remotely as they locate across Vietnam and don't have enough finance to gather together and work at the same place, for now.
+ - Direction: as of now are mostly PC Steam RPG games which put strong emphasis on strategy factor 
+ - Notable Products: previous game - Legendary Hoplite launched 2024 (Mixed review)",Under 15,Legendary Hoplite,"Just a Shadow game
+
+Genre: PvE turn-based deckbuilding with a bit of Roguelite
+Theme: Horror (mild)
+Status: Most of the game direction are finalized, pending to finished content which is chapter based
+Review: Very positive so far
+Publisher: they signed with Neon Doctrine
+Steam link & Demo: https://store.steampowered.com/app/3456690/Just_A_Shadow_Game_Demo",1 / 2,Pitch deck,,v
+3,20/Aug/2025,Indie,Umer Gameworks,VN,Ha Noi,After 2022,"Indie with 3 team members, who work remotely since they don't have budget to set up their office yet
+ - Structure: 1 Project manager (also Game designer), 1 Game designer, 1 Game developer
+ - Direction: make better games, for now focus on Steam as platform to improve their game dev skill
+ - Notable product: Ursid",3,Ursid,"Genre: cozy puzzle
+Theme: Cozy, relaxed, touching
+Status: completed and launched, but due to their inexperience of preparation for launch phase, which resulted in their first product didn't make good use of new game buff, thus barely be able to reach for more user
+Review: Positive
+Publisher: N/A
+Price: ~2.9 USD
+Demo: available - https://store.steampowered.com/app/1479810/Legendary_Hoplite",1 / 2,Pitch deck,,v
+4,20/Aug/2025,Solo developer,IRIS,VN,Ha Noi,After 2022,"Indie - Solo developer
+Thi started this project around mid 2024, and worked on this project during his spare time.
+He is inspirted by narrative, and wanna explore different perspectives, and turn those into an actual quality game
+He has not yet planned out exactly what's next, now he more focus on finished the game then see how it goes",1,The Silent Jungle,"Genre: classic PvE shooter top down 
+Theme: survival horror, not jumpscare but psychology
+Topic: based on the US-Vietnam war, but focus on a veteran US soldier. The twist is the game not being about the war, but about the psychology factor of the US soldier's back story
+Status: Most of the game direction are finalized, pending to finished content which is chapter based
+Demo: available - https://store.steampowered.com/app/3593760/The_Silent_Jungle",1,N/A,,v
+5,23/Jul/2025,"Company
+Mid scale",Ondi Games,VN,Ha Noi,~2021-2022,"Founded ~2021-2022, by Thuan, ex-Zitga (left Zitga ~2018).
+ - Size: ~50 members, in a short term Thuan will try to maintain this optimized number
+ - Structure: most lead directly by Thuan, as he purposely stays hands on, remove middle manager to reduce communication cost, more effeciency
+ - Company core values: Competitive, Customer prioritised, Healthy environment, Be kind to each other
+ - Direction: focus on midcore game, actually one of the very rare few studios in Vietnam that focus entirely on midcore, especially consider the fact that ~2021-2022 era is when game studios are easily swayed by Crypto, yet they focus on their vision
+ - Notable product: their latest game Fortias Saga, featured by Apple in a recent event this May'25
+ - Note: Thuan, aside from Ondi game (which is his current main focus), also has a few other businesses, as well as the fact that he's investing both in term of finance and other support such as legal, finance resource for a few indie mobile studio, whom he thought has potential. Therefore, in a sense, he's currently more as a business man",50,"Fortias Saga
+Hero Blitz
+Shadow Rival
+Shadow Slayer
+Kingdom War",,1,To be updated,,
+6,23/Jul/2025,"Indie
+Mid scale",Soliz Games,VN,Ha Noi,~2020," - Size: ~20 team members, and since the pool of UE5 in VN doesn't have much choice, they go for both the approach of looking for the rare experienced and training the newbies. Also they adapt fast, and make needed changes such as fire those don't perform to look and train for new ones
+ - Structure: in term of Art direction then oversee mostly by Founder Bằng Anh, in term of tech and finance then mostly by Co-Founder Linh
+ - Direction: both founders highly resonnate and motivate by good narrative, thus explain why even though their game Zone 9 is not finished, they already invested into the world building of the light novel. Other than that, they are passionated with high quality & detail visual to cope with their world building, thus choosing the more challenging approach of UE5 instead of the more popular choice of Unity to go for the supposedly first AAA game in VN
+ - Notable product: most of their works are related to oursource other service using UE5 to help with their core as game dev, so Zone 9 is actually their first game
+",20,N/A,"Zone 9:
+ - Platform: Epic (TBD)
+ - Unreal 5
+ - IP: have developed a standalone light novel named Heaven 9, which is of good story telling by itself; the story is still on going 
+ - Genre: 5v5 PvPvE 3rd person shooter 
+     + vE factors: multiple types of zombie, and big boss Zombie (similar to Baron [LoL]), and survival elements. Also there are two phases day and night which heavily impact gameplay, i.e at night the zombies would be more dangerous, and players have limited vision
+    + vP: Kill for points, death lose items which requires players to loot for items again (in the match only, not the extraction type). Whichever team get the needed point will win the game",1 / 2 / 3,"To be updated.
+Deck: https://docs.google.com/presentation/u/0/d/1d99-7iKZSF61SlVXCLWc7SiSdvscgzEO/mobilepresent",,
+7,23/Jul/2025,Big company,Amanotes,VN,Ha Noi,2015,"Founders: Võ Tuấn Bình (CEO) & Nguyễn Tuấn Cường (Co‑founder)
+ - Size: ~ 110 employees 
+ - Organizational Structure: Focused on music game development; includes dedicated R&D, publishing, and marketing teams. They also work with other game dev companies to make music hyper/hybrid game, then they will publish those games to global market
+ - Core Values: “Everyone can Music” — committed to delivering musical experiences globally.
+ - Direction: Developing music-tech and casual/hybrid games with mass-market appeal. In recent years, they seem to be trying to aim for mid core games with music as one of the key gaming design
+ - Notable Product: Magic Tiles 3 (and other Piano Tiles titles) with billion downloads ",110,Magic Tiles 3,,4,,,
+8,23/Jul/2025,Big company,Ikame,VN,Ha Noi,2014,"Founder: Quyet
+ - Organizational Structure: Develops games and apps with an emphasis on creativity and technology; aims to become “Top in SEA.”. In term of games then they focus on internal resource, in term of apps then they do put effort working with oversea such as Pakistan...
+ - Core Values: Put emphasis on together, such as On fire... etc 
+ - Direction: Focused on hyper casual mobile games and apps; recently they are working more on hybrid games, especially with titles such as Screwdom & Bus out, that not only have great download for IAA, but also potential of IAP
+ - Notable Product: Screwdom, Bus out",200,Screwdom,,4,,,
+9,23/Jul/2025,Big company,Wolf Fun,VN,Ha Noi,2014,"Founder: Khánh
+ - Organizational Structure: Unity-based team with R&D, game design, and operations units.
+ - Direction: Emphasis on real-time PvP games and Game-Fi/blockchain titles.
+ - Notable Products: Tank Raid Online (2017, Google Play Editor’s Choice); Heroes Strike (similar to Brawl Stars) Thetan Arena (a blockchain MOBA that are made from Heroes Strike)",100,Thetan Arena (Moba Blockchain),,4,,,
+10,23/Jul/2025,Big company,ABI studio,VN,Ha Noi,2016,"Founded: 2016 (under the umbrella of Onesoft, which was founded in 2010)
+ - Company Size: Over 100 employees, as a core development studio under Onesoft
+ - Organizational Structure: Independent studio under Onesoft. Teams include game design, development, art, QA, and publishing. Collaborates with other studios within the Onesoft ecosystem (like Falcon, Rocket Studio)
+ - Direction: Specializes in arcade, and puzzle mobile games; strong emphasis on hyper-casual and short-session gameplay. Aims for global charting titles with efficient production cycles
+ - Notable Product: Cookingdom, Bus Escape Traffic Jam",100,Cookingdom,,4,,,
+11,23/Jul/2025,Big company,Onesoft,VN,Ha Noi,2010,"Founders: Four co-founders; current CEO leads Falcon, Rocket Studio, ABI under Onesoft ecosystem.
+ - Organizational Structure: Onesoft as parent, with subsidiary studios like ABI focused on mobile action, arcade, and puzzle games.
+ - Direction: Mobile free-to-play games targeting SEA & US markets.
+ - Notable Products: Metal Squad, Galaxy Attack, Space Shooter, Metal Wings 
+
+",100,1945 Air Force: Airplane Games,,4,,,
+12,23/Jul/2025,"Company
+Mid scale",Nopowerup,VN,Ha Noi,2009,"Founder: Hiep
+ - Organizational Structure: focusing on casual mobile game development and marketing.
+ - Direction: Casual, idle, hyper-casual games for global market.
+ - Notable Products: Idle Lumber Empire that has >100M user from 2021 until now, which is quite good as a simulation game
+ - Note: Garena has approached this studio in ~2022, yet haven't finalized the deal",50,Idle Lumber Empire,,4,,,
+13,23/Jul/2025,"Company
+Mid scale",Topebox,VN,Ha Noi,2012,"Founders: Liêm
+ - Organizational Structure: Operates as an independent game development and publishing studio, has developed both internal IP and co-developed with global partners such as Habby
+ - Core Values: Focus on design-driven, emotionally engaging game experiences
+ - Direction: Initially focused on mobile casual and premium games, then Crypto era pivoted to include mid-core and NFT/metaverse-based games, e.g. The Wasted Lands; nowadays show effort into midcore games both on mobile and PC
+ - Notable Products: most recents is Daymare Zero which show direction of adapting into midcore game, though the performance wasn't significant but they still invest into more projects",70,,"2025: Politaire/Heroes
+The evolution of Politaire. A premium roguelike deckbuilder for Steam and iOS.
+Link video: https://www.youtube.com/watch?v=OE4iIw1kfkE&feature=youtu.be
+
+2026: The Severed Gods
+A dark turn-based RPG with unforgettable bosses and worldbuilding
+Link video: https://www.youtube.com/watch?v=oho5DWzPR7c
+Link steam: https://store.steampowered.com/app/3755930/The_Severed_Gods",4,,,
+14,26/Aug/2025,Company,Divmob,VN,Ho Chi Minh,2012,"Founder: Ngô Văn Luyến
+ - Organizational Structure: CEO (Luyến) is also Leader, many employees are divided into different roles such as game designer, game developer,...
+ - Direction: focusing on easy-to-play strategy & action mobile games
+ - Notable Products: Ninja Revenge, Zombie Age 2, Zombie Age 3, Legions War, Stick Fight and Epic Heroes War",Above 50,Stick Fight,,,,no,
+15,26/Aug/2025,Company,XGame Studio,VN,Ha Noi,2018,"Founder: Phung Van Quyet
+ - Organizational Structure: CEO (Quyet) is also Leader, along with two others: Nguyen Tuan Anh as Chief Production Officer and Nguyen Van Viet as Chief Technology Officer.
+ - Core Values: Dynamic, Enthusiastic, Creative, Professional, Open
+ - Direction: focusing on casual and hyper-casual mobile games with trending content
+ - Notable Products: 
+   + Magic Fashion: Doll Dressup which targets a female audience with updates inspired by recent trends such as KPOP Demon Hunter, and Wednesday.
+   + Money Run 3D: Hyper-casual game which has >50M downloads
+   + Craft Runner: Endless run game which has many famous characters (Iron Man, The Flash, Steve (Minecraft))",Above 200,"Super City: Building Master
+Craft Runner
+Meow Merge 2248
+Prison Escape Journey","Capybara Challenge (Early Access):
+- Gerne: Simulator (like My Talking Tom with many mini-games built-in)
+- Downloads: >5M
+- Status: Active (Last Updated: 19/06/2025)",,,no,
+16,26/Aug/2025,Company,Gemmob Studio,VN,Ha Noi,2017,"Founder: Le Dinh Hung
+ - Direction: focusing on casual mobile games
+ - Notable Products: Overdrive & Overdrive II (Action), Galaxy Attack (Shoot'em up (like Chicken Invaders)), Merge Adventure: Auto Tank War (Auto Battle)",50,Overdrive - Ninja Shadow Reven,,,,No,
+17,26/Aug/2025,Company,Horus Entertainment,VN,Ha Noi,2017,"Founder: Nguyen Duy Son
+ - Organizational Structure: Aims to be in the top 100 highest-grossing games in the US by making only high quality global games.
+ - Core Values: Better games make a better life (Games with interesting contents and beautiful graphics could help players relax and recharge after a long day.)
+ - Direction: Focused on FPS mobile games.
+ - Notable Product: 
+   + World War: Fight For Freedom (>100M downloads): FPS that player can't move (like House of The Dead or Beach Head))
+   + BulletStrike: Shooting Game (>10M downloads): like CS, CF",50,World War: Fight For Freedom,,,,,
+18,26/Aug/2025,Indie,Archmage Games Studio,VN,Ha Noi,2021,"Founder: Đạt & Hiển
+ - Organizational Structure: Beside Đạt & Hiển, Nguyễn Khánh Duy is the new CTO of the studio
+ - Direction: Currently, they have only one game and focus solely on PC games.
+ - Notable Product: God Of Weapons (Action Roguelike + Inventory Management) ",20,God Of Weapons,,,,,
+19,26/Aug/2025,Indie,TEGA studio,VN,Ho Chi Minh,~2021,"Founder: Dương Đặng Đức Lợi
+ - Organizational Structure: Founder (Lợi) is a Game Developer as well as the scriptwriter and story writer for the game, while also managing Social. In addition, the team includes one Game Developer and one 3D Technical Artist.
+ - Direction: The team’s aspiration is to bring Vietnamese culture into the game.
+ - Notable Product: Blood Field (Horror) ",3,Blood Field,,,,,
+20,26/Aug/2025,Company,Spirit Bomb,VN,Ho Chi Minh,2013,"Founder: Minh Quan Ngo
+ - Direction: focusing on arcade shooting mobile games
+ - Notable Products: Sky Champ (>10M Downloads), Dragon Wings (>1M Downloads), Atlantis (>5M Downloads)",~50,Dragon Wings,,,,,
+21,26/Aug/2025,Company,Imba Games,VN,Ho Chi Minh,2015," - Core Values: IMBA is dedicated to creating high-quality and enjoyable games that will stand the test of time.
+ - Direction: Focused on RPG and Simulator mobile games
+ - Notable Product: 
+   + Hero Survivors - Spells Maker (>100K downloads): Magic Survival-like game
+   + Meow Meow Warriors (>100K downloads): Idle RPG",>100,Meow Meow Warriors,,,,,
+22,26/Aug/2025,Company,Athena Studio,VN,Ho Chi Minh,2015," - Core Values: focused on developing mobile gaming apps for worldwide users
+ - Direction: Focused on Casual and Puzzle mobile games
+ - Notable Product: 
+   + Woody Block Puzzle (>10M downloads)
+   + Woody 99 - Sudoku Block Puzzle (>5M downloads): Sudoku + Block gameplay",>150,Woody Block Puzzle,,,,,
+23,26/Aug/2025,Company,Bravestars Games,VN,Ha Noi,2013,"Founder: Hoàng Viết Hải (CEO from 2013 - 2025)
+CEO: Lê Mạnh Đức (from 2025)
+ - Core Values: Commitment, Companion, Proactive, Integrity, Learning
+ - Direction: Focused on Casual and Fashion (for female users) mobile games
+ - Notable Product: 
+   + Hair Salon: Beauty Salon Game (>50M downloads)
+   + Block Puzzle - Gem Block (>5M downloads)",>100,Hair Salon: Beauty Salon Game,,,,,
+24,26/Aug/2025,Company,Gear Games,VN,Ha Noi,2006,"Outsourcing Company
+ - Notable Product: 
+   + Legends of Runeterra
+   + Marvel Strike Force
+   + Arcane Rush (dev & publish)",> 400,Arcane Rush,,,,,
+25,26/Aug/2025,Indie,Tea Mobi,VN,Ha Noi,2010,"Founder: Nhat Nguyen
+  - Direction: Focused on avatar life game in 2010s, they have developed many offline casual games in recent years.
+  - Notable Product: 
+   + Avatar Land (Avatar life online game)
+   + Aqua Chaos: Fish Aquarium King (Aquarium-like game)
+   + Ninja School",<10,Ninja School,,,,,
+26,26/Aug/2025,Company,Apero Technologies Group,VN,"Ha Noi, Ho Chi Minh",2020,"Founder: Tai Nguyen
+  - Direction: In addition to games, they also develop some AI apps and other applications.
+  - Notable Product: 
+   + Triple Minded: 3D Sorting Game (>500K downloads): Puzzle Game",~100,Triple Minded: 3D Sorting Game,,,,,
+27,26/Aug/2025,Company,Alley Labs,VN,Ha Noi,2006,"  - Direction: They develop games across multiple genres.
+  - Notable Product: 
+   + Gangster Survivor (>1K downloads)
+   + Match & Score (>50K downloads): Match-3 game with football theme
+   + Custom Racing (>1K downloads): Auto-racing game",>250,Match & Score,,,,,
+28,26/Aug/2025,Company,UNIMOB,VN,Ha Noi,2015,"  - Direction: Focused on casual games, mainly idle RPGs.
+  - Notable Product: 
+   + Food Fever: Idle Restaurant (>1M downloads)
+   + Idle Army: Trading Weapons (>50K downloads)
+   + Undead City: Zombie Survivor (>1M downloads): Roguelite Bullet Hell game",<50,Food Fever: Idle Restaurant,,,,,
+29,26/Aug/2025,Company,Amobear,VN,Ha Noi,2013,"Founder: Tuan Nguyen
+  - Direction: Focused on casual and hyper-casual games.
+  - Notable Product (>10M downloads): 
+   + Gangster City: Hero vs Monster (GTA-like game)
+   + 456 Run Challenge: Clash 3D (Squid Game theme)
+   + Monster Pocket: Run & Building (hyper-casual game with pokemon theme)",<100,Monster Pocket: Run & Building,,,,,
+30,26/Aug/2025,Company,Saigon Dragon Studios,VN,Ho Chi Minh,2015,"CEO: Victor Vautrin
+  - Direction: They are 2D & 3D arts studio and are currently developing and publishing their own game
+  - Notable Product: Space Tales (RTS)",>60,Space Tales,"Space Tales
+- Gerne: RTS
+- Theme: Space
+- Status: Coming soon (no release date yet)
+- Demo: https://store.steampowered.com/app/2457960/Space_Tales/",,,,
+31,26/Aug/2025,Company,BAZOOKA GAMES STUDIO,VN,Ha Noi,2016,"Founder: Đàm Trọng Đức (CEO), Đỗ Trọng Hưng
+  - Direction: Outsource games across multiple games.
+  - Notable Product: 
+   + How to Loot - Pin Pull (>100M Downloads): Puzzle Game
+   + Avatar Life: My World (>10M Downloads) 
+   + Stickman Dragon Fight - Super (>10M Downloads): Fighting game with anime theme
+BAZOOKA GAME STUDIO and SUPERGAME have both worked on some games (based on the websites of both studios):
+   + How to Loot - Pin Pull
+   + Stick Clash
+   + Brain Up",>100,Avatar Life: My World,,,,,
+32,26/Aug/2025,N/A,BRAYANG STUDIO,VN,Ho Chi Minh,2014,"  - Direction: Focusing on shooting games for mobile and VR.
+  - Notable Product: 
+   + Dead Cover: Offline Shooting (>500K Downloads)
+   + Idle Survival: Zombie Poly Z (>10K Downloads) 
+   + Strike Back: Elite Force - FPS (>1M Downloads)",N/A,Strike Back: Elite Force,,,,,
+33,27/Aug/2025,Company,CSCMobi,VN,Ha Noi,2015,"CEO: Phan Văn Thiện
+  - Direction: Focusing on casual games with cute and accessible visuals.
+  - Notable Product (>5M Downloads): 
+   + Kong Island: Farm & Survival
+   + Cooking Marina",>100,Cooking Truck,,,,,
+34,27/Aug/2025,Company,Dmobin Studio,VN,Ha Noi,2019,"  - Direction: Focusing on casual games with simple gameplay similar to flash games.
+  - Notable Product: 
+   + Red Stick Boy: Adventure Game (>10M Downloads)
+   + Survival 456 But It's Impostor (>50M Downloads)",>70,Survival 456 But It's Impostor,,,,,
+35,27/Aug/2025,Company,Funzilla,VN,Ha Noi,2020,"  - Direction: Focusing on casual games with simple gameplay. They have more games on iOS than on Android.
+  - Notable Product: 
+   + Cake Decorate (>1M Downloads)
+   + Alien Kill (>5M Downloads)
+   + Helix Smash (>5M Downloads)",~50,Helix Smash,,,,,
+36,27/Aug/2025,Company,Gamee Studio,VN,Ha Noi,2019,"Founder: Đức Giang
+  - Direction: Focusing on casual and midcore games.
+  - Notable Product: 
+   + Survivor Kingdoms (>1M Downloads): Roguelite RPG
+   + Royal Pin: King Adventure (>5M Downloads): Puzzle Game
+   + Nexus Hero: Adventure RPG (>10K Downloads): Roguelite RPG",>60,Survivor Kingdoms,"God Slayer: RPG Roguelike
+ - Gerne: Roguelite RPG
+ - Theme: Mythology
+ - Status: Beta (Last update: 06/2025)",,,,
+37,27/Aug/2025,Company,Gapu Studio,VN,Ha Noi,N/A,"  - Direction: Focusing on casual mobile games, mainly puzzle.
+  - Notable Product: 
+   + Delete Master 2 (>10M Downloads): Puzzle Game
+   + Death Puzzle (>1M Downloads)",<50,Delete Master 2,,,,,
+38,27/Aug/2025,Company,GENIFY,VN,Ha Noi,2008,"  - Direction: Focusing on casual mobile games
+  - Notable Product: 
+   + Fall.io - Race of Dino (>10M Downloads): Battle Royale with cute theme
+   + Meme Hidden Sniper (>100K Downloads): Shooting game with meme materials",<50,Fall.io - Race of Dino,,,,,
+39,27/Aug/2025,Company,HIGAME,VN,Ha Noi,2022,"  - Direction: Focusing on casual and hyper-casual mobile games
+  - Notable Product: 
+   + Famous Fashion: Stylist Queen (>1M Downloads)
+   + Slime Pet: My Squishy Friend (>1M Downloads): Pet Simulator",~50 - 200,Famous Fashion: Stylist Queen,,,,,
+40,27/Aug/2025,Company,IceBear,VN,Ha Noi,2018,"  - Direction: Focusing on casual and hyper-casual mobile games
+  - Notable Product: 
+   + Dinosaur Merge: Block Fighting (>5M Downloads)
+   + Draw It Story - Draw Puzzle (>50M Downloads): Puzzle
+   + Satisday ASMR: Organizing game (>10M Downloads): Puzzle",>50,Draw It Story - Draw Puzzle,,,,,
+41,27/Aug/2025,N/A,Little Rabbit Games,VN,Ho Chi Minh,2018,"  - Direction: Focusing on casual and hyper-casual games for iOS
+  - Notable Product: 
+   + Vacuum Hero: Hyper-casual
+   + Magic Ball Idle: Idle game with space theme
+   + Paint Roller: Color Race: Hyper-casual",N/A,Vacuum Hero,,,,,
+42,27/Aug/2025,N/A,MegaJoy Studio,VN,Ha Noi,N/A,"Founder: Hoang Doanh
+  - Direction: Focusing on casual mobile games, mainly puzzle.
+  - Notable Product: 
+   + Brain Fever: Puzzle Game (>1M Downloads)
+   + Star Girl: Love Story (>10M Downloads): Puzzle Game
+   + Role Swap: Tricky Puzzle (>10M Downloads)",N/A,Star Girl: Love Story,,,,,
+43,27/Aug/2025,Company,MGIF,VN,Ho Chi Minh,~2018,"Founder: Thanh Nhan https://www.linkedin.com/in/nhan-thanh-4a121659/
+  - Direction: Focusing on their only RPG title
+  - Notable Product: 
+   + Heroes Legend: Idle Battle War (>1M Downloads): RPG
+   + Red and Blue: Twin Color Ball (>100K Downloads): Puzzle Game",<50,Heroes Legend: Idle Battle War,,,,,
+44,27/Aug/2025,Company,Mirai Studio,VN,Ha Noi,2023,"They separated from IceTea Labs after two years of operation and officially became independent in 2023. They are an outsourcing company for mobile, PC, and Web3 games, while also publishing third-party titles.
+
+Company Linkedin: https://www.linkedin.com/company/mirai-studio/
+
+  - Direction: Focusing on casual mobile games
+  - Notable Product: 
+   + Home Rush (>10M Downloads): Puzzle Game
+   + Bad Student: School Prank (>100K Downloads): Simulator",~50 - 200,Home Rush,,,,,
+45,27/Aug/2025,N/A,MoPa Game Studio,VN,Ho Chi Minh,2022,"Founder: Thang Phan (Co-founder) - used to work as Tech Lead for Amanotes for 4 years then went out to start his own studio https://www.linkedin.com/in/thang-phan-496818b9/?originalSubdomain=vn
+  - Direction: Focusing on casual mobile games, mainly .io games.
+  - Notable Product: 
+   + Sky Battle.io (>10K Downloads)
+   + SDragon.IO (>10K Downloads)
+   + Hero.IO - Super Punch (>100K Downloads)",N/A,Hero.IO - Super Punch,,,,,
+46,27/Aug/2025,Indie,Skrollcat Studio,SG,Singapore,2019,"Five people founded a studio while studying and working in Singapore. The Director and   Art Director are Vietnamese.
+
+  - Founders:
+   + Director: Cao Son Tung (currently working as 3D Artist at NUS, previously game artist / level designer at NTU)
+   + Art Director: Son Tra
+Their interview: https://www.youtube.com/watch?v=TVmjM3b4MBo
+
+  - Notable Product: Hoa (2D Platformer game with Ghibli Artstyle, co-developed with Kyx Studio in VN, selling 200k copies, winning 3 Webby Awards in 2022)
+
+  - Even though HOA has been relatively successful, it seems to be just a side hustle of the founder, Son Tung as he's still spending most of his time working his full-time job rather than developing the studio after the first success.",5,Hoa,,,,,
+47,27/Aug/2025,N/A,Net's Game,VN,Ha Noi,2022,"Founder: Khanh .Nguyen Bao
+  - Direction: Focused on casual mobile games with various genres.
+  - Notable Product: 
+   + Monster Rescue: Treasure Hunt (>50K Downloads): 2D Platformer
+   + Fruit & Food: Puzzle Saga (>5K Downloads): Match-3 game
+   + WOF: World of Fighters (>1K Downloads): Slide Scrolling Action game",N/A,Monster Rescue: Treasure Hunt,,,,,
+48,28/Aug/2025,Company,Zitga,VN,Ha Noi,2015,"Founder: Tung Luong - used to be the CEO but now has delegated and working on Eagle Games (studio focusing on mobile Idle games) and Empire Edu (an EdTech start-up)
+
+Current CEO: Harris Hieu Bui (used to worked in MKT and UA at SohaGame (top publisher in VN) and Amanotes - a big studio in VN too)
+
+  - Direction: Focused on midcore mobile games, mainly Action RPGs.
+  - Notable Product: 
+   + Stickman Legends (>50M Downloads): Slide Scrolling Action
+   + Empire Warriors: Tower Defense (>10M Downloads)
+   + Shadow War: Idle RPG Survival (>1M Downloads): Idle RPG",~100,Stickman Legends,,,,,
+49,28/Aug/2025,Company,Percas Studio,VN,Ha Noi,2020,"Founder: Long Nguyễn Minh
+  - Direction: Focused on casual mobile games, mainly Puzzle, although their most successful game is Tower Defense gerne.
+  - Notable Product: 
+   + Stick Conquer (>10M Downloads): Strategy Tower Defense
+   + Bird Story: ASMR Bird Sort (>100K Downloads): Puzzle",<50,Stick War,,,,,
+50,28/Aug/2025,Company,Skylink Studio,VN,Ho Chi Minh,2021,"Co-founder: Vinh Dang Tuan (used to work at VNG studio) & Nam Vo (used to work at Gameloft)
+  - Direction: Focused on casual mobile games, mainly Puzzle
+  - Notable Product: 
+   + Toy Triple - 3D Match Puzzle (>500K Downloads): Puzzle Match-3
+   + Merge Master - Elden Warrior (>1M Downloads)
+   + Tile Animal: Triple Puzzle (>100K Downloads)",>100,,,,,,
+51,28/Aug/2025,Indie,Smulie,VN,Ho Chi Minh,2021,"Founder: Thuan Tran (founded another company named OneP Studio building Unity dev tool for games; used to work as Tech Head at Amanotes)
+  - Direction: They use games for music education.
+  - Notable Product: 
+   + Simpia: Learn Piano Fast (>1M Downloads): Music game that can be used to learn piano
+   + Tap The Beat Duel (>100K Downloads): Rhythm game
+   + Monster All Stars Battle (>10K Downloads): Rhythm game",10 - 25,Simpia: Learn Piano Fast,,,,,
+52,28/Aug/2025,Company,Sugame,VN,Ha Noi,2016,"Founder: Truong Ngoc Duy
+ 
+ - Direction: Focused on puzzle mobile games.
+  - Notable Product: 
+   + Blockpuz (>10M Downloads): Puzzle Block
+   + Tap Away 3D: Tap Master (>1M Downloads): Puzzle
+   + Water Sorting: Color Games (>10M Downloads): Puzzle",~50,Blockpuz,,,,,
+53,28/Aug/2025,Company,Sun Studio,VN,Ho Chi Minh,2018,"  - Direction: Focused on puzzle games for web.
+  - Notable Product: 
+   + Bubble Fall: Bubble Shooter (> 5K Download on GPS)
+   + Dinosaurs Merge Master: Auto Battle (H5 game on crazygames.com)
+   + Sweet Cookie: Match-3",>70,Bubble Fall: Bubble Shooter,,,,,
+54,28/Aug/2025,Company,SuperGame,VN,Ha Noi,2018,"Founder: Chế Đình Sơn
+  - Direction: Focused on casual mobile games.
+  - Notable Product: 
+   + Hero Rescue (>50M Downloads): Puzzle
+   + Stick Clash (>10M Downloads): Strategy
+BAZOOKA GAME STUDIO and SUPERGAME have both worked on some games (based on the websites of both studios):
+   + How to Loot - Pin Pull
+   + Stick Clash
+   + Brain Up",>80,Hero Rescue,,,,,
+55,28/Aug/2025,Company,The Minders Studio,VN,Ha Noi,2021,"Founder: Minh Nguyen Hoang (used to work for Gear as Game Engineer)
+  - Direction: Focused on casual & hyper-casual mobile games.
+  - Notable Product: 
+   + Idle Universe: Planet Miner (>100K Downloads): Idle Simulation with space theme
+   + Sort Frenzy: Rescue Bus Jam 3D (>1K Downloads): Puzzle
+   + Backpack Combat: Bag Fight (>1K Downloads): Action & Management",>40,Idle Universe: Planet Miner,,,,,
+56,28/Aug/2025,Company,Titan Global,VN,Ha Noi,2021,"Founder: Nhat Nguyen (used to work at Zitga as game designer for almost 2 years before founding his own studio)
+  - Direction: Focused on puzzle mobile games.
+  - Notable Product: 
+   + Color Water Sort Wooden Puzzle (>50M Downloads)
+   + Bloom Tile: Match Puzzle Game (>1M Downloads)
+   + Block Puzzle: Block Smash Game (>10M Downloads): Puzzle",~50,Color Water Sort,,,,,
+57,28/Aug/2025,Indie,VIGAFUN,VN,Ha Noi,2020,"Founder: Robert Nguyen
+ 
+ - Direction: Focused on casual & hyper-casual mobile games.
+  - Notable Product: 
+   + Grow Animals (>10M Downloads): Simulation
+   + Jam Highway - Comeback Home (>1M Downloads)
+   + Art Assemble: Home Makeover (>10M Downloads): Simulation",~30,Grow Animals,,,,,
+58,28/Aug/2025,Company,WEE GROUP,VN,Ho Chi Minh,After 2017,"Founded in 2017, they are a technology corporation with multiple subsidiary companies specializing in games.
+
+WEJOY GAMES STUDIO
+Founder: Michael Ngo
+  - Direction: Focused on casual & hyper-casual mobile games. Their main customer base is primarily in the US, India, China, and several European countries.
+
+Apus Game Studio
+Founder: Nam Tran
+  - Direction: Focused on casual & hyper-casual mobile games, mainly simulation.
+  - Notable Product: 
+   + Undead City Ark Gun Idle
+   + Duck Hunt 3D - Craftsman","~30 (WEJOY GAMES STUDIO)
+
+20 - 50 (Apus Game Studio)",,,,,,
+59,28/Aug/2025,Company,WIDOGAME,VN,Ha Noi,2020,"CEO: Peter Nguyen (used to work for Onesoft as Marketing Manager and PM for 12 years; also founded Commandoo - a game publishing startup)
+  - Direction: Focused on casual & hyper-casual mobile games.
+  - Notable Product: 
+   + Pixel by Number (>10M Downloads): Coloring Game
+   + Snow Race 3D™: Fun Racing (>10M Downloads): Hyper-casual
+   + Draw 2 Bridge: Draw Save Car (>5M Downloads): Puzzle",~50,Pixel by Number,,,,,
+60,28/Aug/2025,Company,Wolffun Game,VN,Ho Chi Minh,2014,"Founder: Nguyen Dinh Khanh
+  - Direction: Focused on casual & midcore games.
+  - Notable Product: 
+   + Thetan Immortal - PvP Archer (>100K Downloads): Action
+   + Thetan Creator: Create & Play (>50K Downloads): Avatar Creation & Drawing Game",>50,Thetan Immortal - PvP Archer,,,,,
+61,28/Aug/2025,Indie,Yogame Studio,VN,Ha Noi,2016,"Founder: Chu Hung (used to work for 8 years and reached the level of IS Director at Topica - a once top EdTech platform in VN)
+Invested and partnered by Amanotes
+  - Direction: Focused on music mobile games.
+  - Notable Product: 
+   + Duet Tiles (>10M Downloads)
+   + Duet Cats (>10M Downloads)
+   + Dancing Sky 3 (>10M Downloads)",~30,Duet Tiles,,,,,
+62,28/Aug/2025,Company,EZ Games,VN,Ho Chi Minh,2020,"Founder: Robert Vu (used to work as Head of Publishing at Amanotes)
+Member of Google Vietnam Gaming Growth Lab
+  - Direction: Focused on casual mobile games, mainly Fitness and Sports genre.
+  - Notable Product: 
+   + Idle Workout Master: MMA hero (>10M Downloads)
+   + Pixel Basketball (>10K Downloads): Sports",>50,Idle Workout Master: MMA hero,,,,,
+63,3/Sep/2025,Company,SKYNET,VN,Ha Noi,2012,"  - Direction: Focused on casual mobile games
+  - Notable Product: 
+   + Hero Survival IO (>1M Downloads): Roguelite
+   + Water Puzzle: Cocktail Sort (iOS only): Sort Puzzle",>30,Hero Survival IO,,,,,
+64,3/Sep/2025,Company,Gametamin,VN,Da Nang,2016,"  - Direction: Focused on casual mobile games, mainly puzzle
+  - Notable Product: 
+   + Traffic Jam Cars Puzzle Match3 (>500K Downloads)
+   + Traffic Jam 3D Car Parking >1K only): Sort Puzzle",<50,Traffic Jam Cars Puzzle Match3,,,,,
+65,3/Sep/2025,Indie,Smart Game Studio,VN,Da Nang,2018,"  - Direction: Focused on hyper-casual mobile games
+  - Notable Product: 
+   + Beat Master! (#1 in 53 countries)
+   + Screw Factory (#5 in 18 countries)",~10,Beat Master!,,,,,
+66,3/Sep/2025,Company,BonBonGame,VN,Ha Noi,2016,"Company Linkedin site
+  - Direction: They focus on mobile games targeted at kids
+  - Notable Product: 
+   + Cars drawings: Learn to draw (>5M Downloads)
+   + Cars for kids - Car builder (>10M Downloads)
+   + 123 Number & Counting Games (>10M Downloads)",>50,Cars for kids - Car builder,,,,,
+67,3/Sep/2025,Indie,Cloegames Studio,VN,Ho Chi Minh,2019,"  - Direction: Focused on casual mobile games, they both develop their own products and outsource projects for partners.
+  - Notable Product: 
+   + Guess Words: Animal Rescue
+   + Coke Tapper Retro
+   + Hexa Tile Go",~10,Hexa Tile Go,,,,,
+68,3/Sep/2025,Indie,Darkcup Games,VN,Ho Chi Minh,2022,"Founder: Duc Huy Huynh
+  - Direction: They outsource games, mainly casual games.
+  - Notable Product: 
+   + Coming Home: Escape Alien (>1K Downloads): Puzzle
+   + Color The Flag: Paint Puzzle (>50K Downloads)
+   + Survival Bunny (>10K Downloads): Roguelite & Bullet Hell",~10,Color The Flag: Paint Puzzle,,,,,
+69,5/Sep/2025,Indie,Hexpion Studio,VN,Ho Chi Minh,2021,"Founder: Finn Lin (Lam Quang Linh)
+  - Direction: Focused on RPG games for mobile and PC
+  - Notable Product: 
+   + Claw Quest (>500 Downloads): Claw-style RPG
+   + Ancient Gods (Steam): Roguelite Card RPG",N/A,Ancient Gods,"Claw Quest (Early Access):
+- Platform: Android
+- Gerne: RPG
+- Downloads: >500
+- Status: Active (Last Updated: 20/08/2025)",,,,
+70,5/Sep/2025,Company,Panthera Studio,VN,Ha Noi,2022,"Founder: Kien Vuong
+  - Direction: Focused on RPG games for mobile
+  - Notable Product: 
+   + Box Head: Roguelike (>10M Downloads): Roguelite RPG
+   + Soul Huntress: Offline Games (>100K Downloads): Action RPG
+   + Elysia: The Astral Fall (>10K Downloads): Gacha RPG",>30,Box Head: Roguelike,,,,,
+71,5/Sep/2025,Company,LacBird Entertainment.,VN,Ha Noi,2017,"A subsidiary of LacBird Corp.
+  - Direction: Focused on games featuring Vietnamese culture, mainly for educational purposes.
+  - Notable Product: 
+   + Intedify: Educational game (TBA)
+   + Tale of Exorcists (On Steam): Action",>50,,"Tale of Exorcists
+- Gerne: Action
+- Theme: Historical
+- Status: TBA
+- Steam: https://store.steampowered.com/app/3208960/Tale_of_Exorcists/",,,,
+72,5/Sep/2025,Indie,DreamChaser,VN,Quang Ngai,2024,"Founder: Trần Tuấn Hiệp & Phạm Duy Phúc
+   - Notable Product: DreamChaser - Chạy Trốn Phồn Hoa (>50K Downloads): Endless Runner",2,DreamChaser - Chạy Trốn Phồn Hoa,,,,,
+73,8/Sep/2025,Indie,Corochti,VN,Ho Chi Minh,2025,"Founder: Nguyễn Chấn Nam & Võ Nguyễn Minh Thông
+   - Notable Product: Trở Về Tuổi Thơ (>1M Downloads): Avatar Life",~10,Trở Về Tuổi Thơ,,,,,
+74,8/Sep/2025,Indie,Young Buffalo,VN,N/A,2023,"  - Direction: Focusing on PC games based on Vietnamese life and culture.
+  - Notable Product: 
+   + Divine Guardian (Metroidvania)
+   + Night Shippers (Co-op Horror)",~10,,"Divine Guardian
+- Gerne: Metroidvania
+- Theme: Mythologies & folklores
+- Status: Release Date 2025
+- Demo: https://store.steampowered.com/app/2438220/Divine_Guardian__V_Thn/
+
+Night Shippers
+- Gerne: Co-op Horror
+- Theme: Horror
+- Status: Coming soon
+- Steam: https://store.steampowered.com/app/3761880/Night_Shippers/",,,,
+75,8/Sep/2025,Indie,2OO2,VN,N/A,~2024,"Founder: The Anh
+Initially, they produced analog horror videos, and Bad Parenting was their first game.
+  - Direction: Focused on Bad Parenting, their analog horror game series
+  - Notable Product: 
+   + Bad Parenting 1: Mr. Red Face (Steam - $1.99; 1251 Very Positive Review)",1,Bad Parenting 1: Mr. Red Face,,,,,
+76,11/Sep/2025,Company,Monster Box Studios,VN,Ho Chi Minh,2017,"Founder: Ngo Thanh Liem & Le Huu Lam
+  - Direction: They mainly develop blockchain games, but they are venturing into traditional games.
+  - Notable Product: Rune Seeker (Steam - Free)",<50,Rune Seeker,"Rune Seeker
+- Gerne: Turn-based strategy
+- Theme: Fantasy
+- Status: Early Access
+- Steam: https://store.steampowered.com/app/2469990/Rune_Seeker/",,,,
+77,11/Sep/2025,Company,Tiger Games,VN,Ha Noi,2022,"Founder: Nguyen Anh Dung
+  - Direction: focusing on developing casual & mid-core mobile games
+  - Notable Product: 
+   + Car Parker 3D - Parking Jam (Sort Puzzle)
+   + Fish Journey: Draw to Save (Drawing Puzzle)",<50,Car Parker 3D - Parking Jam,,,,,
+78,11/Sep/2025,Company,Inwave Studio,VN,Ha Noi,2014,"Founder: Dung Nguyen
+They entered the gaming market in 2017.
+  - Direction: focusing on hyper-casual mobile games
+  - Notable Product: 
+   + Tiles Hop (>500M Downloads): Rhythm
+   + Waterpark: Slide Race (>500K Downloads): Hyper-casual",<50,Tiles Hop,,,,,
+79,11/Sep/2025,Indie,Mini Fun Games,VN,N/A,~2017,"Founder: FVS
+  - Direction: focusing on casual games, mostly for PC
+  - Notable Product: 
+   + Rock Crusher (Steam - $6.99): Idler Clicker
+   + Towerful Defense: A Rogue TD (Steam - $9.99): Roguelike Tower Defense
+   + Beat Stickman: Infinity Clones (>100K Downloads - Android): Simulation",1,Rock Crusher,,,,,
+80,11/Sep/2025,Indie,Quasar Art Studio ,VN,Tra Vinh,2021,"
+Founder: Quốc Khang Nguyễn (Pulssarr)
+  - Direction: They are developing their first horror game.
+  - Notable Product: Đồng Cỏ Lau - The Reed Field",1,,"The Reed Field
+- Gerne: Survival Horror
+- Theme: Horror
+- Status: Coming Soon
+- Steam: https://store.steampowered.com/app/3985730/ng_C_Lau__The_Reed_Field/",,,,
+81,11/Sep/2025,Indie/Company,Gcenter Games,VN,Ha Noi,2019,"  - Direction: focusing on casual mobile games, with their two main genres being tower defense and shoot 'em up (similar to Chicken Invaders).
+  - Notable Product: 
+   + Defense Legend 5: Survivor TD (>1M Downloads)
+   + Transmute: Galaxy Battle (>1M Downloads): Shoot'em Up",~30,Defense Legend 5: Survivor TD,,,,,
+82,11/Sep/2025,Company,SENSPARK,VN,Ho Chi Minh,2011,"Founder: Lam Ho 
+ - Direction: focusing on casual mobile games and WEB3
+  - Notable Product: 
+   + Gold Miner Go (>100K Downloads)
+   + Stickman Battle (>10M Downloads)",>30,Stickman Battle,,,,,
+83,11/Sep/2025,Company,TOHSOFT,VN,Ha Noi,2016,"Low-key Founder: Nguyen Dang Hieu
+  - Direction: They offer multiple services, including outsourcing for game and app products. They also develop some action games
+  - Notable Product: 
+   + Shadow fighter 2: Ninja games (>10M Downloads)
+   + Kaz Warrior 3 - Shinobi Legend (>1M Downloads)
+   + Kaz Warrior 2: Warzone & RPG (>10M Downloads)",>50,Kaz Warrior 2: Warzone & RPG,,,,,
+84,11/Sep/2025,N/A,UltraPub,VN,Son La,2021,"  - Direction: focusing on hyper-casual mobile games
+  - Notable Product: 
+   + Monster Shooter: Survival FPS (>10M Downloads)
+   + Gym Idle Clicker: Fitness Hero (>10M Downloads)",N/A,Monster Shooter: Survival FPS,,,,,
+85,15/Oct/2025,Indie,SOGA Studio,VN,N/A,<2024,"  - Direction: focusing on simulation games, mostly for PC
+  - Notable Product: 
+   + Taken Soul (Steam - $9.99): Survival Horror
+   + Cabin Crew Life Simulator (Steam - $12.99): Simulation
+   + Space Station Escape (Steam - $4.99): Simulation",N/A,Taken Soul,,,,,
+86,16/Oct/2025,Solo developer,Little Snake Studio,VN,N/A,2023,"Founder: Vi
+  - Direction: focusing on romance visual novel otome games
+  - Notable Product: Who Murdered My Empress? (Steam - 17.99$): inspired by 19th century Vietnam
+",1,Who Murdered My Empress?,"Broken Fate
+- Gerne: Visual Novel
+- Theme: Horror
+- Status: currently crowdfunding on Kickstarter
+- Steam (Demo): https://store.steampowered.com/app/3704230/Broken_Fate/?curator_clanid=45589382
+
+Capybara Cafe Chronicles
+- Gerne: Visual Novel
+- Theme: Otome
+- Status: To be announced
+- Steam: https://store.steampowered.com/app/3684540/Capybara_Cafe__Chronicles/?curator_clanid=45589382
+
+Princess of the Tomb
+- Gerne: Visual Novel
+- Theme: Otome
+- Status: Coming Soon
+- Steam: https://store.steampowered.com/app/3554180/Princess_of_the_Tomb/?curator_clanid=45589382",,,,
+87,16/Oct/2025,Company,IEC Games,VN,Ha Noi,2015,"  - Direction: focusing on casual & hypercasual mobile games, mainly puzzle
+  - Notable Product: 
+   + Ball Sort Puzzle (>100M Downloads)
+   + Gang Clash (>10M Downloads)",>50,Ball Sort Puzzle,,,,,
+88,16/Oct/2025,Company,Dreamsoft Game Studio,VN,Ha Noi,2021,"Founder: Kien Nguyen
+  - Direction: Outsourcing Company
+  - Notable Product:
+   + Thiên Mệnh Anh Hùng: MMORPG
+   + Merge Master Dragon 3D: Auto Battler",>30,Thiên Mệnh Anh Hùng,,,,,
+89,16/Oct/2025,Company,Dirox,VN,Ho Chi Minh,2003 (established in Vietnam),"Founder: Phil Read
+  - Direction: Foreign outsourcing company with a branch in Vietnam",>100,,,,,,
+90,16/Oct/2025,Company,Zenga,VN,Ha Noi,<2017,"  - Direction: Outsourcing Company focuses on educational games
+  - Notable Product:
+   + Coffee Mania - Sorting Jam (Puzzle) (400K Downloads)
+   + Color Me Happy! (Puzzle) (5K Downloads)
+   + Bucha Series (game series for learning English)",~30,Bucha,,,,,
+91,16/Oct/2025,Company,Taurus Global Studio,VN,Ha Noi,2019,"  - Direction: outsourcing company with main clients from Japan
+  - Notable Product:
+   + Zombie Rush
+   + Eternal Horde",~50,Eternal Horde,,,,,
+92,16/Oct/2025,Company,Weegoon,VN,Ha Noi,2018,"Founder/CEO: Mr.Trong (aka Mr Lee)
+  - Direction: focusing on casual mobile games, mainly puzzle
+  - Notable Product: 
+   + Maze Craze (>1M Downloads)
+   + Ragdoll Break: Kick Loser (>1M Downloads)",>30,Maze Craze,,,,,
+93,16/Oct/2025,Company,Onegame Studio,VN,Ha Noi,2013,"Founders: Khiem DB, Khanh PQ
+  - Direction: focusing on casual mobile games
+  - Notable Product: 
+   + Stick Battle Fight (>10M Downloads): Action
+   + Pull Him Up: Pin Puzzle Rescue (>10M Downloads): Puzzle",>30,Stick Battle Fight,,,,,
+94,16/Oct/2025,Company,The One Game Studio,VN,Ha Noi,2022,"Co-founder: Khúc Mộc Thảo
+  - Direction: focusing on casual mobile games, mainly simulation
+  - Notable Product: 
+   + Move It: Pose Challenge (Simulation)
+   + Puppy Slide Puzzle (Puzzle)
+   + Pawfect Life (Simulation)",>60,Move It: Pose Challenge,,,,,
+95,16/Oct/2025,Company,SOFTFUN,VN,Ho Chi Minh,2019,"Founder: Nguyen Thanh Binh
+  - Direction: focusing on casual mobile games
+  - Notable Product: 
+   + Merge Superhero: Fighting (>1M Downloads)
+   + Bubble Shooter - Classic Pop (>100M Downloads)",>50,Bubble Shooter - Classic Pop,,,,,
+96,16/Oct/2025,Company,Bombus Studio,VN,Ha Noi,2021,"Founder: Nguyen Nhat Anh
+Formerly known as Angles Studio, later renamed to Bombus Studio in 2023
+  - Direction: focusing on midcore mobile games
+  - Notable Product: 
+   + Auto Hero: Auto-shooting game (>1M Downloads)
+   + Hotel Empire Fever (>1M Downloads)",>100,Hotel Empire Fever,,,,,
+97,16/Oct/2025,N/A,Bitcover,,Ho Chi Minh,N/A,"  - Direction: They have developed and continue to work on PC games, while also taking on outsourcing projects for mobile titles of various scales
+  - Notable Product: Lakeside Bar (Steam - 5.99$): Idler",N/A,Lakeside Bar,"Meow Meow Invasion
+- Gerne: Roguelike
+- Theme: Animal
+- Status: Coming Soon
+- Steam (Demo): https://store.steampowered.com/app/3351710/Meow_Meow_Invasion/?curator_clanid=45534137",,,,
+98,16/Oct/2025,N/A,Eagle Games,,Hanoi,2023,"- CEO: Tung Luong - former Co-founder and CEO of Zitga
+- Direction: Idle Tycoon mobile games, trying to create million dollar titles
+- Notable Products:
+   + Idle Zombie: Survival Tycoon - a mix of Overcooked & Idle RPG gameplay (like Capabara Go!) under Zombie Survival theme (launched Apr 2025, >600K Downloads)
+   + Idle Eras Bar: Food Tycoon - Overcooked with Stone Age theme (launched Feb 2024, > 100K Downloads)",N/A,Idle Zombies: Survival Tycoon,,,,,
+99,22/Dec/2025,,JoyUp Games,,Hanoi,2024,,15,Defense Legend 3: Future War,,,,,
+100,,,,,,,,,,,,,,
+101,,,,,,,,,,,,,,
+102,,,,,,,,,,,,,,
+103,,,,,,,,,,,,,,
+104,,,,,,,,,,,,,,
+105,,,,,,,,,,,,,,
+106,,,,,,,,,,,,,,
+107,,,,,,,,,,,,,,
+108,,,,,,,,,,,,,,

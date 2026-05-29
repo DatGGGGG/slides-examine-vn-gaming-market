@@ -1,0 +1,23 @@
+{
+  "country": "VN",
+  "year": 2025,
+  "top_n": 50,
+  "demographics_country": "SE_ASIA",
+  "weight_country": "VN",
+  "top_games_count": 50,
+  "top_apps_count": 109,
+  "total_revenue_top_games": 633697458.4600002,
+  "outputs": {
+    "top_games_csv": "C:\\Users\\VEE0634\\Desktop\\Slide Making\\Examining VN Gaming Market Opportunity 2026\\demographics_analysis\\vn_top_games_2025_top_50.csv",
+    "top_apps_csv": "C:\\Users\\VEE0634\\Desktop\\Slide Making\\Examining VN Gaming Market Opportunity 2026\\demographics_analysis\\vn_top_games_2025_top_50_apps.csv",
+    "apps_with_demographics_csv": "C:\\Users\\VEE0634\\Desktop\\Slide Making\\Examining VN Gaming Market Opportunity 2026\\demographics_analysis\\vn_top_games_2025_top_50_apps_with_demographics.csv",
+    "game_demographics_csv": "C:\\Users\\VEE0634\\Desktop\\Slide Making\\Examining VN Gaming Market Opportunity 2026\\demographics_analysis\\vn_top_games_2025_top_50_game_demographics_weighted.csv",
+    "portfolio_demographics_csv": "C:\\Users\\VEE0634\\Desktop\\Slide Making\\Examining VN Gaming Market Opportunity 2026\\demographics_analysis\\vn_top_games_2025_top_50_portfolio_demographics_weighted.csv",
+    "active_users_raw_csv": "C:\\Users\\VEE0634\\Desktop\\Slide Making\\Examining VN Gaming Market Opportunity 2026\\demographics_analysis\\vn_top_games_2025_top_50_active_users_raw.csv",
+    "avg_dau_csv": "C:\\Users\\VEE0634\\Desktop\\Slide Making\\Examining VN Gaming Market Opportunity 2026\\demographics_analysis\\vn_top_games_2025_top_50_avg_dau.csv"
+  },
+  "demographics_rows": 100,
+  "apps_with_demographics": 100,
+  "active_users_rows": 33324,
+  "apps_with_avg_dau": 99
+}
