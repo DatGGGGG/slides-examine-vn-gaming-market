@@ -2,16 +2,28 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 from io import StringIO
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+DATA_DIR = ROOT / "data"
+RESEARCH_DIR = ROOT / "research"
 CSV_NAME = "vn_gaming_deck_working.csv"
 HTML_NAME = "vn_gaming_deck_workbench.html"
 PYRAMID_JSON_NAME = "demographics_analysis/vietnam_population_pyramid_1950_2025.json"
+MOVIE_REVENUE_CSV_NAME = "moveek_vietnam_monthly_movies_with_boxofficevietnam_recovered_v5_and_vietnamese_flag_gpt54nano_20260528T044609Z.csv"
+YOUTUBE_SHARE_WITH_PCT_CSV_NAME = "most_popular_vn_daily_video_language_counts_with_pct.csv"
+YOUTUBE_SHARE_RAW_CSV_NAME = "most_popular_vn_daily_video_language_counts.csv"
+YOUTUBE_TRENDING_VIDEOS_CSV_NAME = "most_popular_vn_with_is_vietnamese_video.csv"
+VN_MOBILE_GAMES_DOWNLOADS_CSV_NAME = "[Research] Examining VN Gaming Market Opportunity 2026 - Data Sheet - VN Mobile Games (top by downloads).csv"
+YOUTUBE_TRENDING_SNAPSHOT_DATE = "2025-06-30"
+DONOR_SUPPLY_SPECIAL_DATA_JSON_NAME = "donor_supply_specialdata_21_27.json"
+EXEC_SUMMARY_ANALYSIS_CSV_NAME = "[Research] Examining VN Gaming Market Opportunity 2026 - Data Sheet - [Analysis] Executive Summary.csv"
 
 FIELDS = [
     "slide_number",
+    "template_id",
     "slide_type",
     "part_number",
     "part_name",
@@ -28,37 +40,24 @@ FIELDS = [
     "notes",
 ]
 
-ROWS = [
-    ['1', 'cover', '', '', '', '', 'meta', 'Examining Vietnam Gaming Market Opportunity 2026', 'Open the deck with the market question and geographic focus.', 'Deck title and brand framing only.', 'Bold title slide with Garena-style red accent and Vietnam label.', 'This deck tests whether Vietnam is a near-term sourcing opportunity in 2026.', 'seed', '', 'Use as the entry slide for HTML and PowerPoint.'],
-    ['2', 'divider', '01', 'Executive Summary', 'Executive Summary', '', 'meta', 'Executive Summary', 'Start the summary section.', '', 'Centered section-break title.', 'Lead with the answer, then let the body prove it.', 'seed', '', ''],
-    ['3', 'divider', '02', 'Macro & Cultural Factors', 'Macro & Cultural Factors', '', 'meta', 'Macro & Cultural Factors', 'Start the readiness-factor section.', '', 'Section break with subtitle for demand-side and supply-side drivers.', 'Establish whether Vietnam is becoming more ready for local game success.', 'seed', '', ''],
-    ['4', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Income per Capita', 'demand', 'Income per Capita Trends & Regional Benchmarking', "Show whether rising purchasing power is improving Vietnam's readiness for higher-value gaming spend, using actual World Bank GDP per capita data through 2024.", 'World Bank GDP per capita (current US$), Viet Nam:\\n- 2015: $2,578\\n- 2016: $2,735\\n- 2017: $2,956\\n- 2018: $3,222\\n- 2019: $3,441\\n- 2020: $3,534\\n- 2021: $3,704\\n- 2022: $4,148\\n- 2023: $4,323\\n- 2024: $4,717\\n\\n2015-2024 CAGR:\\n- Viet Nam: 6.95%\\n- Indonesia: 4.59%\\n- Philippines: 3.55%\\n- Thailand: 2.88%\\n- Malaysia: 2.33%', 'Custom benchmark slide: 2015-2024 Vietnam trend bars on the left, KPI cards plus ASEAN benchmark CAGR bars on the right.', 'Vietnam still trails richer ASEAN peers on absolute income, but its faster GDP-per-capita growth supports stronger medium-term upside for discretionary gaming spend.', 'priority', '', 'Source: World Bank.'],
-    ['5', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Demand for Digital Entertainment', 'demand', 'Demand for Digital Entertainment', 'Use official sector-value data to infer long-run demand growth for digital entertainment in Vietnam, on a 2015-2024 window consistent with slide 8.', 'National Statistics Office of Vietnam sector-value series, 2015-2024:\\n- Information & Communication (VND bn): 29,392 to 387,489\\n- Arts & Entertainment (VND bn): 24,969 to 71,488\\n\\n2015-2024 CAGR:\\n- Information & Communication: 33.18%\\n- Arts & Entertainment: 12.40%', 'Line chart with 2 lines: Information & Communication and Arts & Entertainment, plus two CAGR scorecards.', 'The steady uptrend in demand for Information & Communication and Arts & Entertainment services probably implies a steady rise in demand for digital entertainment, including games.', 'priority', '', 'Source: National Statistics Office of Vietnam.'],
-    ['6', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Demographics', 'demand', 'Demographics of Vietnamese Gamers', 'Use actual game-level demographics to show which age cohorts dominate the highest-grossing mobile games in Vietnam.', "Top 10 grossing games in Vietnam by 2025 revenue from the local warehouse, with age-bucket distributions pulled from Sensor Tower demographics and combined across app variants using average 2025 VN DAU as weights.\\n\\nImportant method note:\\n- Revenue ranking is Vietnam-only\\n- Demographics use Sensor Tower's SE_ASIA geography because VN is not supported directly by that endpoint\\n- App-level demographic mixes are combined using avg DAU in Vietnam during 2025\\n- Sensor Tower bucket labels are rendered here as age bands: 0-17, 18-24, 25-34, 35-44, 45-54", 'Stacked horizontal bar chart by game using age bands 0-17, 18-24, 25-34, 35-44, and 45-54, plus a short portfolio read-through.', 'Mobile gamers of biggest games in Vietnam are mostly made up of those who are under 25 years old, with the age group of 18-24 contributing the most players.', 'priority', '', 'Source: SensorTower (Revenue-adjusted for Vietnam market; Demographics of SE_ASIA is used as proxy for VN and app variants are combined using average 2025 VN DAU weights).'],
-    ['7', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Historical Demographic Changes', 'demand', 'Vietnam Overall Demographics', "Recreate Vietnam's changing population pyramid from 1950 to 2025 so we can visually explain how the country's age structure evolved into today's gaming-relevant demographic base.", 'Annual Vietnam age-by-sex population pyramid data for 1950-2025, including total population and median age. Local recreation based on PopulationPyramids.org and UN World Population Prospects 2024.', 'Interactive animated population pyramid with play controls, year slider, and quick-jump buttons.', 'Vietnam has a large under-25 population of 37.2 million, equal to 36.6% of the population, which serves as a major potential target audience for gaming.', 'priority', '', 'Source: PopulationPyramids.org / UN World Population Prospects 2024.'],
-    ['8', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Under-25 Population Trend', 'demand', 'Under-25 Population Trend, 1980-2025', "Show how Vietnam's under-25 audience base has evolved over time in both absolute size and share of population.", 'Vietnam under-25 population (0-24) from 1980 to 2025, using the same local population-pyramid dataset as slide 11. Bar = number of people. Line = under-25 share of total population.', 'Combo chart with bars for under-25 people and line for under-25 percentage share, 1980-2025.', "With a rapidly aging population and low replacement rate, Vietnam's under-25 population has already been in a downtrend. If this trend continues, games with mostly youthful user bases will eventually face active-user pressure.", 'priority', '', 'Source: PopulationPyramids.org / UN World Population Prospects 2024.'],
-    ['9', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Hardware', 'demand', 'Hardware', 'Show that device access and connectivity are already strong enough to support mass mobile play, meaningful PC play, and limited console play.', 'Hardware and connectivity evidence:\\n- 100.7M smartphone subscribers in Feb 2024\\n- 127.6 mobile cellular subscriptions per 100 people in 2024\\n- 84.15% internet users in 2024\\n- 99% 4G population coverage in Nov 2024\\n- 90% 5G population coverage by Feb 2026\\n- 82.3% of households on fiber in Oct 2024\\n- 68% of urban 18-39 respondents owned a desktop or laptop in a 2017 Q&Me survey\\n- Console penetration remains below 5%', 'Custom hardware-readiness slide with mobile access metrics on the left and PC / console context on the right.', 'Vietnam is already a mobile-first hardware market: smartphone and internet access are effectively mass-market, urban PC ownership is still meaningful, and console remains niche.', 'priority', '', 'Sources: Freedom House, World Bank/TradingEconomics, Vietnam+, VietnamNet, VnExpress, Pew Research, Q&Me, Digital in Asia.'],
-    ['10', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Console Button Era', 'demand', 'Vietnam Gaming History: Console Button Era', 'Show how gaming first took root in Vietnam through rented consoles, arcade corners, and neighborhood spectators before any formal industry existed.', 'Era focus:\r\n- 1990s\r\n- Famicom / NES clones and PS1 as luxury devices\r\n- Cartridge console shops and arcade centers\r\n- Hyper-local, face-to-face gaming culture', 'Large placeholder collage on the left, structured era panel on the right, and static four-era tabs on top.', 'Gaming in Vietnam began as a local, face-to-face pastime built around rented consoles and shared neighborhood play.', 'priority', '', 'Source: The Evolution of Gaming in Vietnam research document.'],
-    ['11', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'PC Gaming & Internet Boom', 'demand', 'Vietnam Gaming History: PC Gaming & Internet Boom', 'Show how ADSL, Quan Net culture, and the first publishers turned gaming into a mass youth habit while also triggering the strongest social backlash.', 'Era focus:\r\n- 2000-2010\r\n- ADSL rollout and Quan Net dominance\r\n- VNG, VTC Game, FPT Online\r\n- LAN classics and first online-game boom', 'Large placeholder collage on the left, structured era panel on the right, and static four-era tabs on top.', "The internet era made gaming mass-market in Vietnam, but it also produced the country's strongest stigma around games.", 'priority', '', 'Source: The Evolution of Gaming in Vietnam research document.'],
-    ['12', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Mobile Shift & Dawn of Esports', 'demand', 'Vietnam Gaming History: Mobile Shift & Esports', 'Show how smartphones, free-to-play games, streaming, and esports made gaming more mainstream and commercially visible.', 'Era focus:\r\n- 2011-2020\r\n- 3G/4G and affordable smartphones\r\n- Flappy Bird global shockwave\r\n- Garena, streaming, and esports professionalization', 'Large placeholder collage on the left, structured era panel on the right, and static four-era tabs on top.', 'Mobile and esports turned gaming into everyday entertainment and a more socially accepted career path.', 'priority', '', 'Source: The Evolution of Gaming in Vietnam research document.'],
-    ['13', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Cross-Platform & Digital Economy Era', 'demand', 'Vietnam Gaming History: Digital Economy Era', "Show how gaming moved into a cross-platform, globalized, creative-tech role inside Vietnam's digital economy.", 'Era focus:\r\n- 2021-present\r\n- 5G, cloud, and advanced engines\r\n- Amanotes, iKame, Sky Mavis / Axie Infinity\r\n- GameVerse, university game majors, and ecosystem recognition\r\n- 2024: >2,000 bn VND from international users on Google Play (apps + games)\r\n- 2025: 4.9B global downloads for Vietnamese-made mobile games', 'Large placeholder collage on the left, structured era panel on the right, and static four-era tabs on top.', 'Gaming is now framed as a cross-platform creative-tech industry, with Vietnamese studios producing for the world at real export scale.', 'priority', '', 'Source: The Evolution of Gaming in Vietnam research document; ABEI; Google App Summit 2025; VnExpress GameVerse 2026.'],
-    ['14', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'History Summary', 'demand', 'Vietnam Gaming History: Summary', 'Summarize how gaming evolved across all four eras in culture, acceptance, and domestic production capability.', 'Columns:\\n- Aspect\\n- Console Button 1990s\\n- PC & Internet Boom 2000-2010\\n- Mobile Shift & Esports 2011-2020\\n- Digital Economy Era 2021-Present\\n\\nRows:\\n- Gaming Culture\\n- Social Acceptance\\n- VN Game Production', 'Five-column comparison table with compact era summaries by aspect.', "Vietnam's gaming history moved from local play culture into mass digital entertainment, then into a more visible production and export ecosystem.", 'priority', '', 'Source: The Evolution of Gaming in Vietnam research document.'],
-    ['15', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Macro Transformation Bedrock', 'demand', 'Vietnam Macro Backdrop', "Zoom out from gaming history to the broader macro shifts that explain why Vietnam's gaming market could evolve so sharply across eras.", 'Foundational factors from the Bedrock slide:\\n- Economic Condition\\n- State of Technology\\n- Human Resource Capability\\n- Global Cultural Integration\\n- Consumerism & Payment\\n\\nTime columns:\\n- 1990s: Post-Doi Moi & Analog\\n- 2000s: Industrializing & Broadband\\n- 2010s: Mobile Leapfrog & Startup Boom\\n- 2021-2026: Digital Economy & Global Export', 'Four-era macro matrix showing how Vietnam evolved beneath the gaming market.', 'Gaming shifted because the country itself shifted: income rose, technology spread, skills deepened, culture globalized, and digital spending became normal.', 'priority', '', 'Source: Vietnam_Macro_Transformation_Bedrock.pptx, slide 3.'],
-    ['16', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Made-in-Vietnam Entertainment: Movies', 'demand', 'THE RISE OF MADE-IN-VIETNAM ENTERTAINMENT: MOVIES', 'Use Vietnam cinema output and box-office data to show that domestic entertainment production has expanded meaningfully over time, even while international films still dominate total releases.', 'Movie counts use unique movie_slug by listing_year from the merged Moveek + Box Office Vietnam sheet, split between Vietnamese and non-Vietnamese titles. Top-grossing Vietnamese movies use boxofficevietnam_total_revenue_vnd where available.\\n\\nDirectional local counts:\\n- 2010: 4 Vietnamese vs 18 non-Vietnamese\\n- 2015: 40 vs 187\\n- 2020: 22 vs 168\\n- 2025: 46 vs 232', 'Left: stacked yearly chart of Vietnamese and non-Vietnamese movie slugs. Right: top-grossing Vietnamese movie table with release year, title, and revenue.', 'While international movies still take up the majority, the number of Vietnamese movies going to the cinema has trended upward over time, and we increasingly see more high-grossing local releases.', 'priority', '', 'Source: Moveek + Box Office Vietnam merged cinema dataset.'],
-    ['17', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Made-in-Vietnam Entertainment: Concerts', 'demand', 'THE RISE OF MADE-IN-VIETNAM ENTERTAINMENT: CONCERTS', 'Use concert listing data to show that Vietnamese live entertainment is no longer just importing attention from foreign acts; locally produced concerts are now scaling into recognizable mass events.', 'Vietnamese vs non-Vietnamese concert counts come from the concertarchives.org sheet, using the is_vietnamese_concert flag.\\n\\nDirectional counts used for the slide:\\n- 2010: 0 Vietnamese vs 5 non-Vietnamese\\n- 2015: 0 vs 20\\n- 2020: 5 vs 9\\n- 2025: 48 vs 35\\n\\n2026 is excluded as partial/in-progress coverage.', 'Left: stacked bar chart of Vietnamese and non-Vietnamese concert counts by year. Right: hero image of Anh Trai Say Hi as an iconic local-concert example.', 'International acts still make up much of the concert market historically, but Vietnamese concerts have risen sharply and now produce their own iconic large-scale live events.', 'priority', '', 'Source: concertarchives.org sheet; image via Vie Channel / VnExpress.'],
-    ['18', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Made-in-Vietnam Entertainment: YouTube Videos', 'demand', 'THE RISE OF MADE-IN-VIETNAM ENTERTAINMENT: YOUTUBE VIDEOS?', 'Use daily YouTube trending-language data to show whether Vietnamese-language content still dominates attention on a global platform, then ground it with one concrete day-level trending snapshot.', 'Daily Vietnamese-video share uses the language-count sheet from 2022-07-01 to 2025-06-30. The right-side table uses unique trending videos captured on 2025-06-30 from the per-video sheet, deduplicated by video_id within the day.\\n\\nKey stats:\\n- Average daily Vietnamese share: 70.79%\\n- 2025-06-30 Vietnamese share: 61.02%\\n- Unique trending videos on 2025-06-30: 59', 'Left: dense daily line chart of Vietnamese-video share in YouTube trending. Right: scrollable unique trending videos table for 2025-06-30.', 'While Vietnamese videos still make up the majority of YouTube trending in Vietnam, there is a gradual decline over time, showing that Vietnamese audiences are increasingly watching more YouTube content from international creators.', 'priority', '', 'Source: most_popular_vn_daily_video_language_counts.csv and most_popular_vn_with_is_vietnamese_video.csv.'],
-    ['19', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Demand Conclusion', 'demand', 'QUICK SUMMARY: VIETNAM GAMING DEMAND', 'Synthesize the market-readiness section into one demand conclusion: where growth has come from, what is supporting it now, and what may limit it later.', 'This slide should compress the macro, demographic, and history signals into one demand narrative.\\n\\nInclude:\\n- 4 gaming-history eras\\n- Core demand drivers\\n- Near-term vs medium/long-term implication', 'Top: 4-era progression strip. Bottom: horizontal factor cards for demand drivers.', "Vietnam has seen a macro-backed gaming boom, but the same demographic transition that helped create today's market may slow growth later unless the industry broadens beyond the youngest cohorts.", 'priority', '', 'Conclusion slide bridging slides 8-22 into a demand view.'],
-    ['20', 'content', '02', 'Macro & Cultural Factors', 'Demand-side Factors', 'Domestic vs International Preference Conclusion', 'demand', "QUICK SUMMARY: VIETNAM'S PREFERENCE - DOMESTIC VS INTERNATIONAL", 'Synthesize the movies, concerts, and YouTube evidence into one conclusion about where Vietnamese audiences prefer domestic content and where international content is still gaining ground.', 'This slide should compare high-investment local entertainment success versus everyday global-platform consumption.\\n\\nUse:\\n- Movies slide\\n- Concerts slide\\n- YouTube slide', 'Comparative summary across Movies, Concerts, and YouTube with one conclusion on domestic-vs-international preference.', 'Made-in-Vietnam entertainment is gaining ground in heavier, high-investment formats, but daily online entertainment shows a more mixed and increasingly international consumption pattern.', 'priority', '', 'Conclusion slide bridging slides 20-22 into a preference view.'],
-    ['21', 'content', '02', 'Macro & Cultural Factors', 'Supply-side Factors', 'Government Regulation & Policy', 'supply', 'SHIFTING GOVERNMENT STANCE & INDUSTRY REGULATION', 'Explain how Vietnam moved from suspicion and containment toward strategic promotion, while still imposing a tightly controlled domestic operating framework.', 'Use only the government-support research doc. Include:\\n- Early defensive stance\\n- Shift to gaming as a cultural / digital industry\\n- Decree 147 as the new compliance-heavy regime\\n- Why this favors committed local operators over casual foreign entry', 'Custom policy slide with policy-shift summary, Decree 147 implications, and operator-impact boxes.', 'Vietnam now treats gaming as a strategic digital-content industry, but it still regulates the market through a strict localization and compliance regime that raises the barrier to entry.', 'priority', '', 'Source: Vietnamese Game Development Government Support.docx'],
-    ['22', 'content', '02', 'Macro & Cultural Factors', 'Supply-side Factors', 'Support for Domestic Game Development', 'supply', 'SUPPORT FOR DOMESTIC GAME DEVELOPMENT: DIRECT & INDIRECT', 'Show how the Vietnamese state actively supports local game development through direct promotion, fiscal incentives, and talent-pipeline building.', 'Use only the government-support research doc. Include:\\n- Resolutions 79/80 and cultural-industry framing\\n- GameVerse / GameHub / Vietnam Game Alliance\\n- CIT incentives, VAT exemption, R&D super-deduction, SME support\\n- PTIT, UIT, RMIT, FPT Polytechnic and talent pipeline', 'Custom support slide with direct support, indirect support, and talent-pipeline sections.', 'Beyond regulation, Vietnam is increasingly building an enabling stack for domestic studios: promotional platforms, tax incentives, and a more formal game-development talent pipeline.', 'priority', '', 'Source: Vietnamese Game Development Government Support.docx'],
-    ['23', 'content', '02', 'Macro & Cultural Factors', 'Supply-side Factors', 'Quality of Made in VN Games / Capability of VN Studios', 'supply', 'QUALITY OF MADE IN VN GAMES / CAPABILITY OF VN STUDIOS', "Show how Vietnam's production capability evolved from outsourcing and localization into mobile publishing scale and credible premium PC / console development.", 'Use only the production-ecosystem research doc. Include:\\n- Glass Egg and Gameloft as capability academies\\n- Flappy Bird and mobile publishing scale\\n- Amanotes / ABI / Zitga / Sky Mavis / premium PC indies\\n- 2025 output scale and export orientation', 'Custom capability slide with evolution ladder, flagship studios, and ecosystem KPIs.', 'Vietnamese studio capability is no longer just low-cost execution: the market now supports global mobile publishing at scale and an emerging layer of credible premium PC development, although output is still overwhelmingly export-oriented.', 'priority', '', 'Source: Vietnam Game Production Ecosystem_ Evolution.docx'],
-]
+
+
+def build_seed_rows():
+    path = ROOT / CSV_NAME
+    if not path.exists():
+        raise FileNotFoundError(f"Missing seed CSV: {path}")
+    with path.open("r", encoding="utf-8-sig", newline="") as fh:
+        reader = csv.DictReader(fh)
+        return [[row.get(field, "") for field in FIELDS] for row in reader]
+
 
 def to_dicts():
     rows = []
-    for i, row in enumerate(ROWS, 1):
+    for i, row in enumerate(build_seed_rows(), 1):
         item = dict(zip(FIELDS, row))
         item["slide_number"] = str(i)
+        template_id = str(item.get("template_id", "")).strip()
+        item["template_id"] = template_id if template_id.isdigit() else str(i)
         rows.append(item)
     return rows
 
@@ -69,6 +68,49 @@ def csv_text(rows):
     writer.writeheader()
     writer.writerows(rows)
     return buf.getvalue()
+
+
+def read_csv_dicts(path: Path):
+    with path.open("r", encoding="utf-8-sig", newline="") as fh:
+        return list(csv.DictReader(fh))
+
+
+def read_data_csv(path_name: str):
+    return read_csv_dicts(DATA_DIR / path_name)
+
+
+def read_research_csv_rows(path_name: str):
+    path = RESEARCH_DIR / path_name
+    with path.open("r", encoding="utf-8-sig", newline="") as fh:
+        return list(csv.reader(fh))
+
+
+def parse_float(value, default: float = 0.0) -> float:
+    if value is None:
+        return default
+    text = str(value).strip().replace(",", "")
+    if not text:
+        return default
+    try:
+        return float(text)
+    except ValueError:
+        return default
+
+
+def parse_int(value, default: int = 0) -> int:
+    if value is None:
+        return default
+    text = str(value).strip().replace(",", "")
+    if not text:
+        return default
+    try:
+        return int(float(text))
+    except ValueError:
+        return default
+
+
+def is_true_flag(value) -> bool:
+    return str(value).strip().lower() in {"true", "1", "yes", "y"}
 
 
 def load_population_pyramid():
@@ -100,33 +142,29 @@ def load_population_pyramid():
     return {
         "maxValue": max_value,
         "quickYears": [1950, 1980, 1990, 2000, 2010, 2020, 2025],
-        "startYear": 2016,
+        "startYear": 2025,
         "years": years,
     }
 
 
 def load_daily_vietnamese_video_share():
-    pct_path = ROOT / "data/most_popular_vn_daily_video_language_counts_with_pct.csv"
-    raw_path = ROOT / "data/most_popular_vn_daily_video_language_counts.csv"
+    pct_path = DATA_DIR / YOUTUBE_SHARE_WITH_PCT_CSV_NAME
+    raw_path = DATA_DIR / YOUTUBE_SHARE_RAW_CSV_NAME
     rows = []
     if pct_path.exists():
-        with pct_path.open(encoding="utf-8-sig", newline="") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                rows.append(
-                    {
-                        "date": row["date"],
-                        "pct": round(float(row["pct_vietnamese_videos"]), 2),
-                    }
-                )
+        for row in read_csv_dicts(pct_path):
+            rows.append(
+                {
+                    "date": row["date"],
+                    "pct": round(parse_float(row["pct_vietnamese_videos"]), 2),
+                }
+            )
     else:
-        with raw_path.open(encoding="utf-8-sig", newline="") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                total = float(row["unique_trending_videos_total"] or 0)
-                vn = float(row["unique_trending_videos_vietnamese"] or 0)
-                pct = (vn / total * 100.0) if total else 0.0
-                rows.append({"date": row["date"], "pct": round(pct, 2)})
+        for row in read_csv_dicts(raw_path):
+            total = parse_float(row["unique_trending_videos_total"])
+            vn = parse_float(row["unique_trending_videos_vietnamese"])
+            pct = (vn / total * 100.0) if total else 0.0
+            rows.append({"date": row["date"], "pct": round(pct, 2)})
     marker_dates = [
         ("2022-07-01", "Jul 2022"),
         ("2023-01-01", "2023"),
@@ -151,36 +189,251 @@ def load_daily_vietnamese_video_share():
 
 
 def load_trending_videos_for_day(target_date: str, limit: int | None = None):
-    raw_path = ROOT / "data/most_popular_vn_with_is_vietnamese_video.csv"
     by_video = {}
-    with raw_path.open(encoding="utf-8-sig", newline="") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            collection_date = str(row.get("collection_date", ""))
-            if not collection_date.startswith(target_date):
-                continue
-            video_id = row.get("video_id", "").strip()
-            if not video_id:
-                continue
-            rank = int(row.get("rank") or 9999)
-            view_count = int(row.get("view_count") or 0)
-            current = by_video.get(video_id)
-            candidate = {
-                "rank": rank,
-                "title": row.get("title", "").strip(),
-                "channel": row.get("channel_title", "").strip(),
-                "isVietnamese": str(row.get("is_vietnamese_video", "")).upper() == "TRUE",
-                "viewCount": view_count,
-            }
-            if current is None or rank < current["rank"] or (rank == current["rank"] and view_count > current["viewCount"]):
-                by_video[video_id] = candidate
+    for row in read_data_csv(YOUTUBE_TRENDING_VIDEOS_CSV_NAME):
+        collection_date = str(row.get("collection_date", ""))
+        if not collection_date.startswith(target_date):
+            continue
+        video_id = row.get("video_id", "").strip()
+        if not video_id:
+            continue
+        rank = parse_int(row.get("rank"), 9999)
+        view_count = parse_int(row.get("view_count"))
+        current = by_video.get(video_id)
+        candidate = {
+            "rank": rank,
+            "title": row.get("title", "").strip(),
+            "channel": row.get("channel_title", "").strip(),
+            "isVietnamese": is_true_flag(row.get("is_vietnamese_video")),
+            "viewCount": view_count,
+        }
+        if current is None or rank < current["rank"] or (rank == current["rank"] and view_count > current["viewCount"]):
+            by_video[video_id] = candidate
     items = sorted(by_video.values(), key=lambda x: (x["rank"], -x["viewCount"], x["title"]))
     return (items[:limit] if limit else items), len(items)
 
 
-def build_special_data():
-    youtube_share = load_daily_vietnamese_video_share()
-    youtube_top_videos, youtube_day_unique = load_trending_videos_for_day("2025-06-30")
+def load_wide_csv_table(path_name: str):
+    rows = []
+    for row in read_data_csv(path_name):
+        rows.append(
+            {
+                "bucket": row["Price bucket"],
+                "y2023": row["2023"],
+                "y2024": row["2024"],
+                "y2025": row["2025"],
+                "total": row["Total"],
+            }
+        )
+    return rows
+
+
+def load_donor_supply_special_data():
+    path = DATA_DIR / DONOR_SUPPLY_SPECIAL_DATA_JSON_NAME
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    key_map = {
+        "29": "41",
+        "26": "42",
+        "27": "43",
+        "28": "44",
+        "30": "45",
+        "31": "46",
+        "32": "47",
+    }
+    return {new_key: raw[old_key] for old_key, new_key in key_map.items() if old_key in raw}
+
+
+def load_vn_mobile_game_downloads_summary():
+    rows = read_data_csv(VN_MOBILE_GAMES_DOWNLOADS_CSV_NAME)
+    yearly = {}
+    total_vietnam = 0
+    total_foreign = 0
+    vietnam_titles = []
+
+    for row in rows:
+        year = parse_int(row.get("year"))
+        downloads = parse_int(row.get("downloads"))
+        if not year or not downloads:
+            continue
+        bucket = yearly.setdefault(
+            year,
+            {
+                "year": year,
+                "vietnam": 0,
+                "foreign": 0,
+                "total": 0,
+                "vn_titles": [],
+                "games": [],
+            },
+        )
+        game_item = {
+            "name": str(row.get("game_name", "")).strip(),
+            "rank": parse_int(row.get("rank_in_year")),
+            "downloads": downloads,
+            "is_vietnamese": is_true_flag(row.get("is_vietnamese_game")),
+        }
+        bucket["games"].append(game_item)
+        if is_true_flag(row.get("is_vietnamese_game")):
+            bucket["vietnam"] += downloads
+            bucket["vn_titles"].append(
+                {
+                    "name": game_item["name"],
+                    "rank": game_item["rank"],
+                    "downloads": downloads,
+                }
+            )
+            vietnam_titles.append(
+                {
+                    "year": year,
+                    "name": game_item["name"],
+                    "rank": game_item["rank"],
+                    "downloads": downloads,
+                }
+            )
+            total_vietnam += downloads
+        else:
+            bucket["foreign"] += downloads
+            total_foreign += downloads
+        bucket["total"] += downloads
+
+    yearly_counts = []
+    for year in sorted(yearly):
+        item = yearly[year]
+        item["vn_titles"].sort(key=lambda x: (x["rank"], -x["downloads"], x["name"]))
+        item["games"].sort(key=lambda x: (x["rank"], -x["downloads"], x["name"]))
+        yearly_counts.append(
+            {
+                "year": item["year"],
+                "vietnam": item["vietnam"],
+                "foreign": item["foreign"],
+                "total": item["total"],
+                "vn_title_label": " / ".join(x["name"] for x in item["vn_titles"]),
+                "vn_rank_label": ", ".join(f"#{x['rank']}" for x in item["vn_titles"]),
+                "games": item["games"],
+            }
+        )
+
+    max_total = max((item["total"] for item in yearly_counts), default=0)
+    tick_step = max(1000000, math.ceil(max_total / 4 / 1000000) * 1000000) if max_total else 1000000
+    max_y = tick_step * 4
+    highlights = [
+        {
+            "year": item["year"],
+            "title": item["name"],
+            "rank": item["rank"],
+            "downloads": item["downloads"],
+        }
+        for item in sorted(vietnam_titles, key=lambda x: (x["year"], x["rank"], -x["downloads"], x["name"]))
+    ]
+
+    return {
+        "yearly_counts": yearly_counts,
+        "totalVietnam": total_vietnam,
+        "totalForeign": total_foreign,
+        "vietnamYears": sum(1 for item in yearly_counts if item["vietnam"] > 0),
+        "peakTotal": max_total,
+        "peakVietnam": max((item["vietnam"] for item in yearly_counts), default=0),
+        "peakForeign": max((item["foreign"] for item in yearly_counts), default=0),
+        "maxY": max_y,
+        "ticks": [tick_step * i for i in range(5)],
+        "highlights": highlights,
+        "source": VN_MOBILE_GAMES_DOWNLOADS_CSV_NAME,
+    }
+
+
+def load_vietnam_movie_revenue_summary():
+    yearly = {year: {"vietnamese": 0.0, "foreign": 0.0} for year in range(2021, 2026)}
+    top_by_year = {year: {"vietnamese": [], "foreign": []} for year in range(2021, 2026)}
+    seen = set()
+    for row in read_data_csv(MOVIE_REVENUE_CSV_NAME):
+        year = parse_int(row.get("listing_year"), default=-1)
+        if year < 2021 or year > 2025:
+            continue
+        slug = str(row.get("movie_slug", "")).strip()
+        if not slug:
+            continue
+        key = (year, slug)
+        if key in seen:
+            continue
+        revenue = parse_float(row.get("estimated_total_revenue_vnd") or row.get("boxofficevietnam_total_revenue_vnd"))
+        if not revenue:
+            continue
+        is_vietnamese = is_true_flag(row.get("is_vietnamese_movie"))
+        bucket = yearly.setdefault(year, {"vietnamese": 0.0, "foreign": 0.0})
+        title = (
+            str(row.get("movie_title", "")).strip()
+            or str(row.get("boxofficevietnam_name", "")).strip()
+            or str(row.get("boxofficevietnam_candidate_vi_title", "")).strip()
+            or str(row.get("boxofficevietnam_candidate_en_title", "")).strip()
+            or slug
+        )
+        candidate = {
+            "year": year,
+            "slug": slug,
+            "title": title,
+            "revenue_vnd": revenue,
+        }
+        if is_vietnamese:
+            bucket["vietnamese"] += revenue
+            top_by_year[year]["vietnamese"].append(candidate)
+        else:
+            bucket["foreign"] += revenue
+            top_by_year[year]["foreign"].append(candidate)
+        seen.add(key)
+
+    yearly_counts = []
+    total_vietnamese = 0.0
+    total_foreign = 0.0
+    for year in range(2021, 2026):
+        vn = yearly.get(year, {}).get("vietnamese", 0.0)
+        foreign = yearly.get(year, {}).get("foreign", 0.0)
+        total = vn + foreign
+        share = (vn / total * 100) if total else 0.0
+        yearly_counts.append({
+            "year": year,
+            "vietnamese": vn,
+            "foreign": foreign,
+            "total": total,
+            "share": share,
+        })
+        total_vietnamese += vn
+        total_foreign += foreign
+
+    latest = yearly_counts[-1]
+    peak = max(yearly_counts, key=lambda item: item["total"])
+    top_rows = []
+    for year in range(2021, 2026):
+        vn_top = max(top_by_year.get(year, {}).get("vietnamese", []), key=lambda item: item["revenue_vnd"], default=None)
+        foreign_top = max(top_by_year.get(year, {}).get("foreign", []), key=lambda item: item["revenue_vnd"], default=None)
+        top_rows.append({
+            "year": year,
+            "vietnamese_title": vn_top["title"] if vn_top else "",
+            "vietnamese_revenue_vnd": vn_top["revenue_vnd"] if vn_top else 0.0,
+            "foreign_title": foreign_top["title"] if foreign_top else "",
+            "foreign_revenue_vnd": foreign_top["revenue_vnd"] if foreign_top else 0.0,
+        })
+    return {
+        "yearly_counts": yearly_counts,
+        "top_rows": top_rows,
+        "totalVietnamese": total_vietnamese,
+        "totalForeign": total_foreign,
+        "latestVietnamese": latest["vietnamese"],
+        "latestForeign": latest["foreign"],
+        "latestShare": latest["share"],
+        "peakYear": peak["year"],
+        "source": f"{MOVIE_REVENUE_CSV_NAME}; revenue estimated from Box Office Vietnam and web research.",
+    }
+
+
+def merge_special_data(*sections):
+    merged = {}
+    for section in sections:
+        merged.update(section)
+    return merged
+
+def build_market_special_data(population_pyramid):
     return {
         "8": {
             "years": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"],
@@ -228,7 +481,7 @@ def build_special_data():
             ],
             "source": "SensorTower (Revenue-adjusted for Vietnam market; Demographics of SE_ASIA is used as proxy for VN and app variants are combined using average 2025 VN DAU weights).",
         },
-        "11": load_population_pyramid(),
+        "11": population_pyramid,
         "12": {
             "years": [1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
             "people": [32160241, 32806999, 33423497, 34027280, 34648624, 35249864, 35867616, 36433926, 36907313, 37409647, 37975179, 38588556, 39203382, 39755059, 40209632, 40554354, 40763802, 40847248, 40817893, 40691288, 40510440, 40303891, 40080456, 39843468, 39591159, 39309806, 39078379, 38936967, 38839696, 38656010, 38397652, 38234968, 38147910, 38083357, 38053183, 37988506, 37807199, 37581281, 37364207, 37206403, 37130318, 37107883, 37126859, 37184411, 37235428, 37209509],
@@ -256,6 +509,17 @@ def build_special_data():
             "consoleRead": "Console is still a niche channel. Digital in Asia's March 2026 Vietnam market synthesis says console gaming penetration remains below 5%, with only Sony maintaining official retail presence.",
             "source": "Sources: Freedom House; World Bank/TradingEconomics; Vietnam+; VietnamNet; VnExpress; Pew Research; Q&Me; Digital in Asia.",
         },
+    }
+
+def build_movie_revenue_data(vietnam_movie_revenue):
+    return {
+        "30": {
+            **vietnam_movie_revenue,
+        },
+    }
+
+def build_history_special_data():
+    return {
         "14": {
             "era_key": "console-button",
             "era_title": "Dawn of Gaming & Console Button Era",
@@ -332,10 +596,10 @@ def build_special_data():
         "18": {
             "columns": [
                 "Aspect",
-                "Console Button<br>1990s",
-                "PC & Internet Boom<br>2000 - 2010",
-                "Mobile Shift & Esports<br>2011 - 2020",
-                "Digital Economy Era<br>2021 - Present",
+                "Console Button\n1990s",
+                "PC & Internet Boom\n2000 - 2010",
+                "Mobile Shift & Esports\n2011 - 2020",
+                "Digital Economy Era\n2021 - Present",
             ],
             "rows": [
                 {
@@ -409,6 +673,10 @@ def build_special_data():
             ],
             "source": "Vietnam_Macro_Transformation_Bedrock.pptx, slide 3.",
         },
+    }
+
+def build_media_special_data(youtube_share, youtube_top_videos, youtube_day_unique, mobile_game_downloads):
+    return {
         "20": {
             "yearly_counts": [
                 {"year": 2010, "vietnamese": 4, "non_vietnamese": 18, "total": 22},
@@ -429,15 +697,24 @@ def build_special_data():
                 {"year": 2025, "vietnamese": 46, "non_vietnamese": 232, "total": 278},
             ],
             "top_movies": [
-                {"release_year": 2025, "movie_name": "Mua Do", "revenue_vnd": 714030389098},
+                {"release_year": 2025, "movie_name": "Mưa Đỏ", "revenue_vnd": 714030389098},
                 {"release_year": 2024, "movie_name": "Mai", "revenue_vnd": 551219434134},
-                {"release_year": 2024, "movie_name": "Lat Mat 7: Mot Dieu Uoc", "revenue_vnd": 482735908932},
-                {"release_year": 2023, "movie_name": "Nha Ba Nu", "revenue_vnd": 459587516927},
-                {"release_year": 2021, "movie_name": "Bo Gia", "revenue_vnd": 395129426000},
-                {"release_year": 2025, "movie_name": "Bo Tu Bao Thu", "revenue_vnd": 332177505723},
-                {"release_year": 2023, "movie_name": "Lat Mat 6: Tam Ve Dinh Menh", "revenue_vnd": 273105461926},
-                {"release_year": 2025, "movie_name": "Tu Chien Tren Khong", "revenue_vnd": 251893119016},
-                {"release_year": 2025, "movie_name": "Nha Gia Tien", "revenue_vnd": 242523470236},
+                {"release_year": 2024, "movie_name": "Lật Mặt 7: Một Điều Ước", "revenue_vnd": 482735908932},
+                {"release_year": 2023, "movie_name": "Nhà Bà Nữ", "revenue_vnd": 459587516927},
+                {"release_year": 2021, "movie_name": "Bố Già", "revenue_vnd": 395129426000},
+                {"release_year": 2025, "movie_name": "Bộ Tứ Báo Thủ", "revenue_vnd": 332177505723},
+                {"release_year": 2023, "movie_name": "Lật Mặt 6: Tấm Vé Định Mệnh", "revenue_vnd": 273105461926},
+                {"release_year": 2025, "movie_name": "Tử Chiến Trên Không", "revenue_vnd": 251893119016},
+                {"release_year": 2025, "movie_name": "Thám Tử Kiên", "revenue_vnd": 248927360616},
+                {"release_year": 2025, "movie_name": "Nhà Gia Tiên", "revenue_vnd": 242523470236},
+                {"release_year": 2025, "movie_name": "Lật Mặt 8", "revenue_vnd": 231998509909},
+                {"release_year": 2025, "movie_name": "Nụ Hôn Bạc Tỷ", "revenue_vnd": 211617608755},
+                {"release_year": 2025, "movie_name": "Truy Tìm Long Điền Hương", "revenue_vnd": 206735411821},
+                {"release_year": 2020, "movie_name": "Tiệc Trăng Máu", "revenue_vnd": 172745666799},
+                {"release_year": 2025, "movie_name": "Địa Đạo: Mặt Trời Trong Bóng Tối", "revenue_vnd": 172474675105},
+                {"release_year": 2019, "movie_name": "Mắt Biếc", "revenue_vnd": 165092870244},
+                {"release_year": 2021, "movie_name": "Lật Mặt 5: 48H", "revenue_vnd": 156741535974},
+                {"release_year": 2024, "movie_name": "Linh Miêu: Quỷ Nhập Tràng", "revenue_vnd": 149673909850},
             ],
             "source": "Moveek + Box Office Vietnam merged cinema dataset.",
         },
@@ -478,6 +755,9 @@ def build_special_data():
             "source": "most_popular_vn_daily_video_language_counts.csv and most_popular_vn_with_is_vietnamese_video.csv.",
         },
         "23": {
+            **mobile_game_downloads,
+        },
+        "24": {
             "eras": [
                 {
                     "name": "Console Button Era",
@@ -518,9 +798,9 @@ def build_special_data():
                     "copy": "Vietnam has moved from cash-only habits toward digital payments, e-wallets, and instant digital spending, which makes monetized gaming behavior much easier to sustain.",
                 },
             ],
-            "source": "Slides 8-19 synthesis: World Bank; NSO Vietnam; PopulationPyramids/UN WPP; SensorTower; Q&Me; concert/cinema/YouTube local datasets; The Evolution of Gaming in Vietnam research document.",
+            "source": "Slides 8-23 synthesis: World Bank; NSO Vietnam; PopulationPyramids/UN WPP; SensorTower; Q&Me; concert/cinema/YouTube/mobile local datasets; The Evolution of Gaming in Vietnam research document.",
         },
-        "24": {
+        "25": {
             "cards": [
                 {
                     "name": "Movies",
@@ -547,9 +827,149 @@ def build_special_data():
                     "image_credit": "Image: TubeFilter / MrBeast wilderness article.",
                 },
             ],
-            "source": "Slides 20-22 synthesis: Moveek + Box Office Vietnam; concertarchives.org; most_popular_vn_daily_video_language_counts.csv; most_popular_vn_with_is_vietnamese_video.csv.",
+            "source": "Slides 16-23 synthesis: Moveek + Box Office Vietnam; concertarchives.org; most_popular_vn_daily_video_language_counts.csv; most_popular_vn_with_is_vietnamese_video.csv.",
         },
+    }
+
+
+def build_entertainment_market_comparison_special_data():
+    return {
         "26": {
+            "rows": [
+                {
+                    "group": "Movies",
+                    "number": "Vietnamese cinema releases rose from 4 titles in 2010 to 46 in 2025. Vietnamese films also reached 59% of box-office revenue in 2025.",
+                    "story": "Local films are no longer a niche alternative. They are increasingly competitive with foreign releases on both scale and commercial traction.",
+                    "dominator": "VN",
+                    "gaining": "VN",
+                },
+                {
+                    "group": "Large Concerts",
+                    "number": "Vietnamese large-scale concerts grew from virtually none to 48 in 2025, overtaking foreign concerts in the dataset.",
+                    "story": "Vietnamese organizers and artists now have both the audience pull and production confidence to lead major live events.",
+                    "dominator": "VN",
+                    "gaining": "VN",
+                },
+                {
+                    "group": "Ticketbox Physical Events",
+                    "number": "From 2023 to 2025, Vietnamese organizers dominated Ticketbox event supply and covered a wider spread of price tiers, from budget to ultra-premium.",
+                    "story": "Domestic event operators are not only larger on the platform; they also appear better at serving multiple audience segments and premium tiers.",
+                    "dominator": "VN",
+                    "gaining": "VN",
+                },
+                {
+                    "group": "YouTube",
+                    "number": "Vietnamese videos still held the majority overall, but share fell from 92% in July 2022 to a low of 44% in February 2025.",
+                    "story": "YouTube remains locally strong, but international content is gaining ground as Vietnamese users consume more borderless, globally distributed entertainment.",
+                    "dominator": "VN",
+                    "gaining": "Foreign",
+                },
+                {
+                    "group": "Mobile Games",
+                    "number": "Vietnam's top-10 most-downloaded mobile games remain overwhelmingly foreign-led, though Vietnamese titles still break into the leaderboard occasionally.",
+                    "story": "Mobile gaming is still foreign-dominated, but local titles such as Tro Ve Tuoi Tho show that Vietnamese-made products can still win meaningful visibility.",
+                    "dominator": "Foreign",
+                    "gaining": "VN",
+                },
+            ],
+            "note": "YouTube and mobile games face more borderless competition because they are free or low-friction, high-frequency formats. Physical and higher-investment formats leave more room for local cultural fit and domestic supply strength.",
+            "source": "[Research] Examining VN Gaming Market Opportunity 2026 - Data Sheet - [Analysis] Comparing Entertainment Markets.csv",
+        },
+    }
+
+
+def build_executive_summary_special_data():
+    raw_rows = read_research_csv_rows(EXEC_SUMMARY_ANALYSIS_CSV_NAME)
+    content_map = {}
+    for row in raw_rows:
+        if len(row) < 3:
+            continue
+        title = str(row[1]).strip()
+        content = str(row[2]).strip()
+        if title and content:
+            content_map[title] = content
+
+    return {
+        "38": {
+            "headline": "Vietnam's gaming market matured from an informal gray market into a full-fledged digital-entertainment ecosystem.",
+            "cards": [
+                {
+                    "label": "Industry Development",
+                    "headline": "The market gained real depth in both consumption and domestic production over roughly three decades.",
+                    "points": [
+                        "From the 1990s to 2025, Vietnam moved from a niche black market of Chinese-made NES clones into a developed gaming market with strength on both the demand side and the local-production side.",
+                        "This was not just a rise in play volume. It was a transition into a more complete gaming economy with broader participation, stronger monetization, and visible local studio capability.",
+                    ],
+                },
+                {
+                    "label": "Regulation & Acceptance",
+                    "headline": "Public framing shifted from social-risk containment toward mainstream habit and strategic tech-business value.",
+                    "points": [
+                        "Government regulation and social acceptance changed materially as gaming moved from being framed around addiction and academic risk toward becoming an everyday behavior in a smartphone-led market.",
+                        "Gaming is now also viewed more credibly as a technology business with export and economic upside, not only as a youth-management problem.",
+                    ],
+                },
+                {
+                    "label": "Macro Tailwinds",
+                    "headline": "Five structural tailwinds underpin that industry expansion.",
+                    "points": [
+                        "Economics: from post-embargo recovery and survival spending to a bustling digital economy with discretionary demand.",
+                        "Technology: from analog lines and CRT screens to 5G connectivity and pervasive mobile usage.",
+                        "Human resources: from basic literacy and hardware training to a creative-tech workforce and formal university pipeline.",
+                        "Global integration: from geopolitical isolation to native global citizens and the first signs of cultural export.",
+                        "Consumerism and payment: from cash-only habits to a cashless economy and mature digital consumption.",
+                    ],
+                },
+            ],
+            "source": content_map.get("The Development of Gaming Industry in Vietnam", EXEC_SUMMARY_ANALYSIS_CSV_NAME),
+        },
+        "39": {
+            "demand": [
+                "Most near-term demand factors are favorable: income is rising relatively fast, digital-entertainment demand is increasing, the installed internet/mobile base is strong, and Vietnam still has a large youth audience.",
+                "The main structural risk is demographic aging: the under-25 cohort is shrinking as a share of population, which may reduce the long-run target audience for youth-skewing games.",
+                "Across movies, concerts, YouTube, and other entertainment formats, Vietnamese audiences no longer show an automatic bias toward foreign content; local entertainment is already dominating or gaining ground in multiple categories.",
+                "Mobile gaming remains the clearest exception: foreign titles still dominate the top-download charts, although domestically made titles such as Tro Ve Tuoi Tho show that breakthrough local demand is possible if quality and marketing can match foreign competition.",
+            ],
+            "supply": [
+                "Government now provides visible support for domestic game development through official recognition, lower tax rates, and the opening of formal university pathways for game education.",
+                "Vietnamese studios have already proven global capability through names such as Amanotes, iKame, and Sky Mavis rather than remaining only low-end service providers.",
+                "The main mismatch is strategic direction: much studio effort and policy logic still point toward export-first success under a 'Do local, go global' model, likely because export markets offer easier monetization and better profitability than pushing Made-in-Vietnam games for Vietnamese players.",
+            ],
+            "source": content_map.get("Demand & Supply for Gaming", EXEC_SUMMARY_ANALYSIS_CSV_NAME),
+        },
+    }
+
+
+def build_supply_special_data():
+    return {
+        "31": {
+            "yearly_counts": [
+                {"year": 2023, "vietnam": 408, "foreign": 32},
+                {"year": 2024, "vietnam": 508, "foreign": 106},
+                {"year": 2025, "vietnam": 1437, "foreign": 222},
+            ],
+            "peakVietnam": 1437,
+            "peakForeign": 222,
+            "totalVietnam": 2353,
+            "totalForeign": 360,
+            "readthrough": "Data from Ticketbox, the most popular e-commerce platform in Vietnam for event tickets, also highlights the dominance of domestic events' sold-out ticket tiers versus foreign. In 2025, 86.6% of all sold-out ticket tiers on Ticketbox are Vietnamese domestic events.",
+            "note": "Sold-out ticket-tier counts are joined to the event-level foreign_event flag and filtered to entertainment categories only: music, theatersandart, others, and sport.",
+            "source": "Ticketbox event-level source joined to entertainment-only Vietnam/foreign sold-out tier summaries; categories kept: music, theatersandart, others, sport.",
+        },
+        "29": {
+            "foreign": {
+                "ticketCount": load_wide_csv_table("ticketbox_foreign_events_entertainment_only_yearly_price_bucket_ticket_tier_count_2023_2025_wide.csv"),
+                "soldCount": load_wide_csv_table("ticketbox_foreign_events_entertainment_only_yearly_price_bucket_soldout_ticket_tier_count_2023_2025_wide.csv"),
+                "soldRate": load_wide_csv_table("ticketbox_foreign_events_entertainment_only_yearly_price_bucket_soldout_rate_2023_2025_wide.csv"),
+            },
+            "vietnam": {
+                "ticketCount": load_wide_csv_table("ticketbox_vietnam_events_entertainment_only_yearly_price_bucket_ticket_tier_count_2023_2025_wide.csv"),
+                "soldCount": load_wide_csv_table("ticketbox_vietnam_events_entertainment_only_yearly_price_bucket_soldout_ticket_tier_count_2023_2025_wide.csv"),
+                "soldRate": load_wide_csv_table("ticketbox_vietnam_events_entertainment_only_yearly_price_bucket_soldout_rate_2023_2025_wide.csv"),
+            },
+            "source": "Ticketbox tier rows joined to the foreign_event event sheet; entertainment-only categories: music, theatersandart, others, sport.",
+        },
+        "34": {
             "timeline": [
                 {
                     "label": "Early internet era",
@@ -587,7 +1007,7 @@ def build_special_data():
             ],
             "source": "Vietnamese Game Development Government Support.docx",
         },
-        "27": {
+        "35": {
             "direct_support": [
                 "Resolutions 79 and 80 position digital cultural products, including games, inside a broader national cultural-industry plan.",
                 "The state targets 5,000 specialists for history-focused educational game development and links support to digitizing heritage into interactive products.",
@@ -610,7 +1030,7 @@ def build_special_data():
             },
             "source": "Vietnamese Game Development Government Support.docx",
         },
-        "28": {
+        "36": {
             "evolution": [
                 {
                     "phase": "Outsourcing & training academies",
@@ -640,151 +1060,24 @@ def build_special_data():
         },
     }
 
+def build_special_data():
+    youtube_share = load_daily_vietnamese_video_share()
+    youtube_top_videos, youtube_day_unique = load_trending_videos_for_day(YOUTUBE_TRENDING_SNAPSHOT_DATE)
+    mobile_game_downloads = load_vn_mobile_game_downloads_summary()
+    vietnam_movie_revenue = load_vietnam_movie_revenue_summary()
+    population_pyramid = load_population_pyramid()
+    return merge_special_data(
+        build_market_special_data(population_pyramid),
+        build_movie_revenue_data(vietnam_movie_revenue),
+        build_history_special_data(),
+        build_media_special_data(youtube_share, youtube_top_videos, youtube_day_unique, mobile_game_downloads),
+        build_executive_summary_special_data(),
+        build_entertainment_market_comparison_special_data(),
+        build_supply_special_data(),
+        load_donor_supply_special_data(),
+    )
 
-HTML_TEMPLATE = """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VN Gaming Deck Workbench</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root{--red:#ed1c24;--ink:#171717;--muted:#606976;--paper:#fff;--bg:#0f172a;--panel:rgba(15,23,42,.82);--line:#e5e7eb;--demand:#1d4ed8;--supply:#059669;--balance:#7c3aed;--summary:#ea580c;--meta:#64748b}
-    *{box-sizing:border-box} body{margin:0;font-family:Roboto,sans-serif;background:radial-gradient(circle at top left,rgba(237,28,36,.18),transparent 24%),radial-gradient(circle at bottom right,rgba(29,78,216,.16),transparent 26%),linear-gradient(135deg,#0b1020,#111827 55%,#1e293b);color:#fff;overflow:hidden}
-    .app{display:grid;grid-template-columns:minmax(220px,280px) minmax(0,1fr) minmax(280px,360px);grid-template-areas:"sidebar work editor";gap:16px;height:100vh;padding:16px;overflow:hidden}.pane,.toolbar,.stage-wrap{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:18px;backdrop-filter:blur(18px)}
-    .pane{display:flex;flex-direction:column;overflow:hidden;min-height:0}.sidebar-pane{grid-area:sidebar}.editor-pane{grid-area:editor}.head{padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,.08)}.head h2{margin:0 0 6px;font:800 18px Inter,sans-serif}.head p{margin:0;color:#9ca3af;font-size:13px;line-height:1.5}
-    .controls{padding:12px 18px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid rgba(255,255,255,.06)} input,select,textarea,button{font:14px Roboto,sans-serif}
-    input,select,textarea{width:100%;padding:11px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;outline:none} textarea{min-height:92px;resize:vertical;line-height:1.5}
-    .list{padding:10px;overflow:auto;display:flex;flex-direction:column;gap:8px}.item{padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);cursor:pointer}.item.active{border-color:rgba(237,28,36,.6);background:rgba(237,28,36,.12)}
-    .i-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:8px;font:800 11px Inter,sans-serif;color:#fda4af;text-transform:uppercase}.i-title{font:700 14px/1.35 Inter,sans-serif;margin-bottom:8px}.i-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#9ca3af}
-    .work{grid-area:work;display:flex;flex-direction:column;gap:16px;min-height:0;overflow:hidden}.toolbar{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-    .toolbar .group{display:flex;gap:10px;flex-wrap:wrap;align-items:center;min-width:0}
-    button{border:0;border-radius:999px;padding:10px 15px;cursor:pointer;font:700 13px Inter,sans-serif}.primary{background:var(--red);color:#fff}.ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.1)} .pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.07);font:700 12px Inter,sans-serif;color:#cbd5e1}
-    .stage-wrap{padding:16px;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0}.stage-top{display:flex;justify-content:space-between;gap:10px;font:700 12px Inter,sans-serif;color:#cbd5e1;letter-spacing:.08em;text-transform:uppercase}
-    .stage{flex:1;min-height:0;display:flex;justify-content:center;align-items:flex-start;overflow:hidden;padding:2px}
-    .slide-shell{position:relative;width:1280px;height:720px;flex:none}
-    .slide{position:absolute;inset:0;width:1280px;height:720px;background:var(--paper);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.28);overflow:hidden;transform-origin:top left}.slide:after{content:"";position:absolute;left:0;right:0;bottom:0;height:12px;background:var(--red)}
-    .body{position:absolute;inset:0;padding:52px 64px 60px;display:flex;flex-direction:column}.cover{justify-content:center;align-items:flex-end;text-align:right;background:radial-gradient(circle at left top,rgba(237,28,36,.12),transparent 34%),linear-gradient(180deg,#fff,#fbfbfc)}
-    .mini{align-self:flex-start;color:var(--red);font:800 13px Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;margin-bottom:72px}.cover .title{max-width:920px;font:800 62px/1.04 Inter,sans-serif;text-transform:uppercase}.cover .sub{margin-top:18px;color:var(--red);font:800 28px Inter,sans-serif;letter-spacing:.28em;text-transform:uppercase}
-    .divider{justify-content:center;align-items:center;text-align:center;background:linear-gradient(90deg,rgba(237,28,36,.98) 0 22%,#fff 22%)}.divider .side{position:absolute;left:46px;top:72px;color:#fff;font:800 13px Inter,sans-serif;letter-spacing:.18em;text-transform:uppercase}.divider .part{color:var(--red);font:800 18px Inter,sans-serif;letter-spacing:.25em;text-transform:uppercase;margin-bottom:12px}.divider h1{margin:0;max-width:860px;font:800 56px/1.08 Inter,sans-serif;text-transform:uppercase}
-    .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}.path{color:var(--red);font:800 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase}.badge{display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;border:1px solid transparent;font:800 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase}
-    .meta{background:#f1f5f9;color:var(--meta);border-color:#cbd5e1}.demand{background:#eff6ff;color:var(--demand);border-color:#bfdbfe}.supply{background:#ecfdf5;color:var(--supply);border-color:#a7f3d0}.balance{background:#f5f3ff;color:var(--balance);border-color:#ddd6fe}.summary{background:#fff7ed;color:var(--summary);border-color:#fed7aa}
-    .s-title{font:800 31px Inter,sans-serif;text-transform:uppercase;border-bottom:2px solid var(--line);padding-bottom:14px;margin-bottom:24px}.grid{display:grid;grid-template-columns:1.08fr .92fr;gap:24px;flex:1}.stack{display:flex;flex-direction:column;gap:18px}.card{border:1px solid var(--line);border-radius:16px;padding:20px 22px;background:#fff}.soft{background:#faf7f7}.accent{background:linear-gradient(180deg,#fffaf7,#fff)}.label{color:var(--red);font:800 12px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}.copy{white-space:pre-wrap;color:var(--muted);font-size:16px;line-height:1.6}.note{margin-top:10px;font-size:12px;color:#7c8594}
-    .form{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px;overflow:auto}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:7px}.field label{font:800 11px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#cbd5e1}.help{font-size:12px;color:#9ca3af;line-height:1.5}.hidden{display:none}
-    .income-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:18px;flex:1}.income-panel{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:#fff}.income-panel.soft{background:#faf7f7}.income-title{font:800 12px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
-    .trend-wrap{display:flex;gap:12px;align-items:flex-end;height:316px}.y-axis{width:40px;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:20px;border-right:1px solid #dbe1e8;color:#8b95a3;font:700 10px Inter,sans-serif}.trend-area{flex:1;position:relative;height:100%}.gridline{position:absolute;left:0;right:0;height:1px;background:#eef2f7}.bars{position:absolute;inset:0 0 20px 0;display:flex;align-items:flex-end;gap:8px}.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}.bar{width:100%;max-width:46px;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#60a5fa,#1d4ed8);position:relative}.bar.highlight{background:linear-gradient(180deg,#fb7185,#ed1c24)}.bar-val{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font:700 9px Inter,sans-serif;color:#1f2937;white-space:nowrap}.bar-year{margin-top:5px;font:700 10px Inter,sans-serif;color:#6b7280}
-    .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.kpi{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.kpi-num{font:800 24px Inter,sans-serif;color:var(--red);line-height:1.02}.kpi-lbl{margin-top:4px;font:800 10px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}.bench{display:flex;flex-direction:column;gap:9px}.bench-row{display:flex;align-items:center;gap:10px}.bench-name{width:86px;font:700 12px Inter,sans-serif;color:#374151}.bench-track{flex:1;height:18px;background:#eef2f7;border-radius:999px;overflow:hidden}.bench-fill{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;background:#cbd5e1;color:#1f2937;font:800 10px Inter,sans-serif}.bench-fill.highlight{background:var(--red);color:#fff}.bench-note{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.5px;line-height:1.45;color:#374151}
-    .line-grid{display:grid;grid-template-columns:1.16fr .84fr;gap:16px;flex:1}.line-panel{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff}.line-panel.soft{background:#faf7f7}.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}.legend-item{display:flex;align-items:center;gap:8px;font:700 11px Inter,sans-serif;color:#4b5563}.legend-swatch{width:18px;height:4px;border-radius:999px}.sw-blue{background:#2563eb}.sw-gold{background:#f59e0b}
-    .line-wrap{display:flex;gap:10px;align-items:flex-end;height:312px}.line-axis{width:40px;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:22px;border-right:1px solid #dbe1e8;color:#8b95a3;font:700 10px Inter,sans-serif}.line-area{position:relative;flex:1;height:100%}.line-gridline{position:absolute;left:0;right:0;height:1px;background:#eef2f7}.line-svg{position:absolute;inset:0 0 22px 0;width:100%;height:calc(100% - 22px);overflow:visible}.line-labels{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between}.line-year{flex:1;text-align:center;font:700 10px Inter,sans-serif;color:#6b7280}
-    .line-note{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:12px;line-height:1.4;color:#374151}.commentary-box{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:linear-gradient(180deg,#fffaf7,#fff);font-size:12.5px;line-height:1.45;color:#374151}.custom-copy{font-size:12px;line-height:1.4;color:#374151}.analysis-box{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:#fff;font-size:12px;line-height:1.4;color:#374151;margin-top:10px}.analysis-box .income-title{margin-bottom:6px}.analysis-box .bullet{margin-top:5px}
-.demo-grid{display:grid;grid-template-columns:1.34fr 0.66fr;gap:16px;align-items:start}.demo-panel{border:1px solid var(--line);border-radius:18px;padding:12px 14px;background:#fff}.demo-panel.soft{background:linear-gradient(180deg,#fffaf7,#fff)}.demo-legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}.demo-legend .legend-item{font-size:10px}.seg18{background:#2563eb}.seg25{background:#ef4444}.seg35{background:#f59e0b}.seg45{background:#64748b}.seg55{background:#111827}.demo-axis{display:grid;grid-template-columns:170px 1fr;gap:10px;align-items:end;margin-bottom:6px}.demo-ticks{display:flex;justify-content:space-between;font:700 9.5px Inter,sans-serif;color:#8791a1}.demo-rows{display:flex;flex-direction:column;gap:8px}.demo-row{display:grid;grid-template-columns:170px 1fr;gap:10px;align-items:center}.demo-game{font:700 10.5px/1.2 Inter,sans-serif;color:#2b2f38}.demo-star{color:#ef4444;font:800 12px/1 Inter,sans-serif;vertical-align:top;margin-left:1px}.demo-rev{display:block;font:600 9.5px/1.1 Inter,sans-serif;color:#8b95a3;margin-top:2px}.demo-track{position:relative;height:20px;border-radius:999px;background:#eef2f7;overflow:hidden;display:flex}.demo-seg{height:100%}.demo-seg-label{display:none}.demo-source{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line);font-size:10.5px;line-height:1.3;color:#4b5563}.demo-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.demo-kpi{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:#fff}.demo-kpi-num{font:800 22px/1 Inter,sans-serif;color:#dc2626}.demo-kpi-lbl{margin-top:4px;font:800 10px/1.2 Inter,sans-serif;color:#6b7280;text-transform:uppercase;letter-spacing:.08em}.demo-note{font-size:12px;line-height:1.45;color:#374151}.demo-note strong{color:#111827}.demo-bullet{margin-top:6px}
-    .pyramid-panel{border:1px solid var(--line);border-radius:18px;padding:10px 14px;background:linear-gradient(180deg,#fbfcff,#fff);display:flex;flex-direction:column;gap:7px;flex:1;min-height:0}.pyramid-top{display:flex;flex-direction:column;align-items:center;gap:5px}.pyramid-sub{margin-top:-1px;color:#667085;font-size:11px;line-height:1.25}.pyramid-summary{display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 14px;border-radius:14px;background:#eef4ff;min-width:270px}.pyramid-year{font:800 38px/1 Inter,sans-serif;color:#2563eb}.pyramid-metrics{display:flex;flex-direction:column;gap:2px;font:500 11.5px/1.15 Roboto,sans-serif;color:#475467}.pyramid-legend{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.pyramid-legend .legend-item{font-size:10px}.sw-male{background:#7da4f7}.sw-female{background:#ef86bf}.pyramid-chart{border:1px solid #e8edf5;border-radius:14px;background:#fff;padding:6px 10px 6px;position:relative}.pyramid-axis-head{display:none}.pyramid-axis-side{display:flex;justify-content:space-between;color:#8b95a3;font:700 9px Inter,sans-serif}.pyramid-center-zero{text-align:center;color:#8b95a3;font:800 8.5px Inter,sans-serif}.pyramid-rows{display:flex;flex-direction:column;gap:2px}.pyramid-row{display:grid;grid-template-columns:54px 1fr 42px 1fr;align-items:center;gap:10px;min-height:12px}.pyramid-age{font:700 8.75px/1 Inter,sans-serif;color:#667085;text-align:right}.pyramid-half{height:10px;background:repeating-linear-gradient(to right,#eef2f7 0,#eef2f7 1px,transparent 1px,transparent 25%);position:relative}.pyramid-half.right{background:repeating-linear-gradient(to left,#eef2f7 0,#eef2f7 1px,transparent 1px,transparent 25%)}.pyramid-center{height:10px;background:#e5e7eb;border-radius:999px}.pyramid-bar{position:absolute;top:1px;bottom:1px;border-radius:2px;transition:width .28s ease;cursor:pointer}.pyramid-bar.male{right:0;background:#7da4f7}.pyramid-bar.female{left:0;background:#ef86bf}.pyramid-controls{display:flex;flex-direction:column;gap:6px;margin-top:auto}.pyramid-action{display:flex;justify-content:center;gap:8px;align-items:center}.pyramid-play,.pyramid-step{padding:8px 18px;border-radius:12px;background:#3b5ce7;color:#fff;box-shadow:0 10px 20px rgba(59,92,231,.18);font:700 12px Inter,sans-serif}.pyramid-step{padding:8px 12px;min-width:42px}.pyramid-slider-wrap{display:flex;align-items:center;gap:10px}.pyramid-end{width:40px;font:700 10.5px Inter,sans-serif;color:#667085}.pyramid-slider{flex:1;-webkit-appearance:none;appearance:none;height:9px;border-radius:999px;background:linear-gradient(90deg,#3b5ce7 0 var(--progress,0%),#d8e3ff var(--progress,0%) 100%);outline:none}.pyramid-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:#3b5ce7;border:2px solid #fff;box-shadow:0 2px 8px rgba(59,92,231,.28)}.pyramid-slider::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:#3b5ce7;border:2px solid #fff;box-shadow:0 2px 8px rgba(59,92,231,.28)}.pyramid-jumps{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}.pyramid-jump{padding:5px 9px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#475467;font:700 10px Inter,sans-serif}.pyramid-jump.active{background:#eef4ff;border-color:#bfd0ff;color:#2f57df}.pyramid-foot{font-size:9.5px;line-height:1.25;color:#667085;text-align:center}.pyramid-tooltip{position:absolute;display:none;pointer-events:none;z-index:5;min-width:150px;max-width:190px;padding:8px 10px;border-radius:10px;background:rgba(17,24,39,.94);color:#fff;box-shadow:0 12px 24px rgba(15,23,42,.18);font:500 11px/1.35 Roboto,sans-serif}.pyramid-tooltip strong{display:block;font:800 11px/1.3 Inter,sans-serif;margin-bottom:2px}
-    .u25-panel{border:1px solid var(--line);border-radius:18px;padding:14px 16px;background:linear-gradient(180deg,#fbfcff,#fff);display:flex;flex-direction:column;gap:9px;flex:1;min-height:0}.u25-top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px}.u25-legend{display:flex;gap:14px;flex-wrap:wrap}.u25-legend .legend-item{font-size:11px}.sw-bar{background:#7da4f7;height:8px}.sw-line{width:18px;height:0;border-top:3px solid #ed1c24;border-radius:0}.u25-kpis{display:flex;gap:10px}.u25-kpi{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;min-width:126px}.u25-kpi-num{font:800 21px/1 Inter,sans-serif;color:#2563eb}.u25-kpi-lbl{margin-top:4px;font:800 10px/1.2 Inter,sans-serif;color:#6b7280;text-transform:uppercase;letter-spacing:.08em}.u25-chart-wrap{display:flex;gap:12px;align-items:flex-end;height:330px}.u25-left-axis,.u25-right-axis{width:48px;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:22px;color:#8b95a3;font:700 10px Inter,sans-serif}.u25-left-axis{border-right:1px solid #dbe1e8;padding-right:6px;text-align:right}.u25-right-axis{border-left:1px solid #dbe1e8;padding-left:6px;text-align:left}.u25-area{position:relative;flex:1;height:100%}.u25-gridline{position:absolute;left:0;right:0;height:1px;background:#eef2f7}.u25-svg{position:absolute;inset:0 0 22px 0;width:100%;height:calc(100% - 22px);overflow:visible}.u25-hit{cursor:pointer}.u25-labels{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between}.u25-year{flex:1;text-align:center;font:700 9px Inter,sans-serif;color:#6b7280}.u25-note{margin-top:2px;padding-top:6px;border-top:1px dashed var(--line);font-size:11.5px;line-height:1.32;color:#374151}.u25-tooltip{position:absolute;display:none;pointer-events:none;z-index:6;min-width:156px;max-width:196px;padding:8px 10px;border-radius:10px;background:rgba(17,24,39,.95);color:#fff;box-shadow:0 12px 24px rgba(15,23,42,.18);font:500 11px/1.35 Roboto,sans-serif}.u25-tooltip strong{display:block;font:800 11px/1.3 Inter,sans-serif;margin-bottom:2px}
-    .hardware-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:16px;flex:1;min-height:0}.hardware-panel{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff}.hardware-panel.soft{background:linear-gradient(180deg,#fbfcff,#fff)}.hardware-hero{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.hardware-hero-card{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#fff}.hardware-hero-num{font:800 24px/1 Inter,sans-serif;color:#2563eb}.hardware-hero-lbl{margin-top:4px;font:800 10px/1.2 Inter,sans-serif;color:#6b7280;text-transform:uppercase;letter-spacing:.08em}.hardware-hero-note{margin-top:3px;font:600 10px/1.2 Inter,sans-serif;color:#9ca3af}.hardware-bars{display:flex;flex-direction:column;gap:10px}.hardware-row{display:grid;grid-template-columns:190px 1fr 62px;gap:10px;align-items:center}.hardware-name{font:700 11.5px/1.25 Inter,sans-serif;color:#374151}.hardware-row-note{display:block;margin-top:2px;font:600 9.5px/1.15 Inter,sans-serif;color:#9ca3af}.hardware-track{height:16px;border-radius:999px;background:#eef2f7;overflow:hidden}.hardware-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#60a5fa,#1d4ed8)}.hardware-val{text-align:right;font:800 11px Inter,sans-serif;color:#374151}.hardware-source{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:10.5px;line-height:1.3;color:#4b5563}.hardware-side{display:flex;flex-direction:column;gap:10px}.hardware-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hardware-kpi{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:#fff}.hardware-kpi-num{font:800 24px/1 Inter,sans-serif;color:#dc2626}.hardware-kpi-lbl{margin-top:4px;font:800 10px/1.2 Inter,sans-serif;color:#6b7280;text-transform:uppercase;letter-spacing:.08em}.hardware-copy{font-size:12px;line-height:1.42;color:#374151}.hardware-copy strong{color:#111827}
-    .history-era-layout{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}.history-era-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.history-era-tab{padding:8px 8px 7px;border-radius:14px;border:1.5px solid #d7dde7;background:#fff;text-align:center;color:#374151}.history-era-tab.active{border-color:#ed1c24;background:#fff4f4;box-shadow:0 8px 18px rgba(237,28,36,.08)}.history-era-tab-title{display:block;font:800 9px/1.14 Inter,sans-serif;text-transform:uppercase;letter-spacing:.04em}.history-era-tab-years{display:block;margin-top:4px;font:700 8.7px/1.1 Inter,sans-serif;color:#6b7280}.history-era-main{display:grid;grid-template-columns:.88fr 1.12fr;gap:12px;flex:1;min-height:0}.history-era-visual{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#fbfcff,#fff);padding:16px;display:flex;flex-direction:column;justify-content:space-between;min-height:0}.history-era-visual-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.history-era-chip{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:#eef4ff;border:1px solid #bfd0ff;color:#1d4ed8;font:800 9px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase}.history-era-visual-years{font:800 10px/1 Inter,sans-serif;color:#ed1c24;letter-spacing:.11em;text-transform:uppercase}.history-era-placeholder{position:relative;flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;border:1px dashed #cbd5e1;border-radius:16px;background:linear-gradient(180deg,#fff,#f8fbff);overflow:hidden}.history-era-placeholder.has-image{padding:0;border-style:solid;background:#f8fafc}.history-era-image{width:100%;height:100%;object-fit:cover;display:block}.history-era-placeholder-text{font:800 22px/1.15 Inter,sans-serif;color:#475569;max-width:300px}.history-era-placeholder.has-image .history-era-placeholder-text{display:none;padding:0 20px}.history-era-placeholder.has-image.failed{padding:14px}.history-era-placeholder.has-image.failed .history-era-placeholder-text{display:block}.history-era-placeholder-note{margin-top:7px;font-size:10px;line-height:1.28;color:#64748b;text-align:center}.history-era-placeholder-credit{margin-top:4px;font-size:9px;line-height:1.24;color:#8a94a6;text-align:center}.history-era-panel{border:1px solid var(--line);border-radius:22px;background:#fff;padding:12px 14px;display:flex;flex-direction:column;min-height:0}.history-era-panel-title{font:800 20px/1.04 Inter,sans-serif;color:#111827;text-transform:uppercase}.history-era-summary{margin-top:5px;font-size:11px;line-height:1.36;color:#374151}.history-era-sections{display:grid;grid-template-columns:.92fr 1.08fr;grid-template-rows:1fr 1fr;grid-template-areas:"milestones culture" "milestones acceptance";gap:8px;flex:1;min-height:0;margin-top:8px}.history-era-box{border:1px solid var(--line);border-radius:16px;background:#fff;padding:9px 10px;display:flex;flex-direction:column;min-height:0}.history-era-box.milestones{grid-area:milestones}.history-era-box.culture{grid-area:culture}.history-era-box.acceptance{grid-area:acceptance}.history-era-box-title{font:800 9.7px/1.08 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#374151;margin-bottom:5px}.history-era-list{margin:0;padding-left:15px;color:#4b5563}.history-era-list li{font-size:10.2px;line-height:1.28;margin:0 0 5px}.history-era-copy{font-size:10.3px;line-height:1.3;color:#4b5563}.history-era-source{margin-top:5px;padding-top:5px;border-top:1px dashed var(--line);font-size:9.2px;line-height:1.18;color:#667085}
-    .history-summary-panel{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#fbfcff,#fff);padding:16px 16px 12px;display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}.history-summary-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px}.history-summary-sub{max-width:860px;font-size:11px;line-height:1.38;color:#4b5563}.history-summary-table-wrap{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}.history-summary-table{width:100%;border-collapse:collapse;table-layout:fixed}.history-summary-table th,.history-summary-table td{padding:10px 10px;vertical-align:top;border-bottom:1px solid #e9edf3}.history-summary-table tr:last-child td{border-bottom:0}.history-summary-table thead th{background:#f8fafc;color:#111827;font:800 9.5px/1.2 Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase}.history-summary-table thead th:nth-child(1){width:14%}.history-summary-table thead th:nth-child(n+2){width:21.5%}.history-summary-table td{font-size:10.8px;line-height:1.34;color:#374151}.history-summary-table td:first-child{font:800 10px/1.28 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#dc2626;background:#fffdfd}.history-summary-source{margin-top:auto;padding-top:7px;border-top:1px dashed var(--line);font-size:9.5px;line-height:1.25;color:#667085}
-    .macro-bedrock-panel{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#fbfcff,#fff);padding:14px 14px 10px;display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}.macro-bedrock-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}.macro-bedrock-sub{max-width:860px;font-size:10px;line-height:1.3;color:#4b5563}.macro-bedrock-table-wrap{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}.macro-bedrock-table{width:100%;border-collapse:collapse;table-layout:fixed}.macro-bedrock-table th,.macro-bedrock-table td{padding:7px 8px;vertical-align:top;border-bottom:1px solid #e9edf3}.macro-bedrock-table tr:last-child td{border-bottom:0}.macro-bedrock-table thead th{background:#f8fafc;color:#111827;font:800 8.5px/1.14 Inter,sans-serif;letter-spacing:.03em;text-transform:uppercase}.macro-bedrock-table thead th:nth-child(1){width:15%}.macro-bedrock-table thead th:nth-child(n+2){width:21.25%}.macro-bedrock-table td{font-size:9.7px;line-height:1.22;color:#374151}.macro-bedrock-table td:first-child{font:800 9.2px/1.18 Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#dc2626;background:#fffdfd}.macro-bedrock-source{margin-top:auto;padding-top:6px;border-top:1px dashed var(--line);font-size:9px;line-height:1.18;color:#667085}
-    .movies-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:14px;flex:1;min-height:0}.movies-panel{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#fbfcff,#fff);padding:14px 14px 10px;display:flex;flex-direction:column;gap:10px;min-height:0}.movies-chart-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}.movies-sub{max-width:520px;font-size:10.5px;line-height:1.3;color:#4b5563}.movies-kpi{border:1px solid var(--line);border-radius:12px;background:#fff;padding:9px 11px;min-width:112px}.movies-kpi-num{font:800 22px/1 Inter,sans-serif;color:#dc2626}.movies-kpi-lbl{margin-top:4px;font:800 10px/1.15 Inter,sans-serif;color:#6b7280;text-transform:uppercase;letter-spacing:.06em}.movies-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:2px}.movies-legend .legend-item{font-size:10.5px}.sw-movie-vn{background:#dc2626;height:8px}.sw-movie-non{background:#94a3b8;height:8px}.movies-chart-wrap{display:flex;gap:10px;align-items:flex-end;height:334px}.movies-left-axis{width:42px;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:22px;border-right:1px solid #dbe1e8;padding-right:6px;text-align:right;color:#8b95a3;font:700 10px Inter,sans-serif}.movies-area{position:relative;flex:1;height:100%}.movies-gridline{position:absolute;left:0;right:0;height:1px;background:#eef2f7}.movies-bars{position:absolute;inset:0 0 22px 0;display:flex;align-items:flex-end;gap:4px}.movies-bar-col{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%;position:relative}.movies-stack{width:100%;max-width:24px;height:100%;display:flex;flex-direction:column-reverse;justify-content:flex-start;cursor:pointer}.movies-seg{width:100%;box-shadow:0 4px 10px rgba(15,23,42,.06)}.movies-seg.vn{background:linear-gradient(180deg,#fb7185,#dc2626);border-radius:0 0 7px 7px}.movies-seg.non{background:linear-gradient(180deg,#cbd5e1,#94a3b8);border-radius:7px 7px 0 0}.movies-labels{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between}.movies-year{flex:1;text-align:center;font:700 9px Inter,sans-serif;color:#6b7280}.movies-note{margin-top:2px;padding-top:7px;border-top:1px dashed var(--line);font-size:10.5px;line-height:1.28;color:#4b5563}.movies-tooltip{position:absolute;display:none;pointer-events:none;z-index:6;min-width:160px;max-width:210px;padding:8px 10px;border-radius:10px;background:rgba(17,24,39,.95);color:#fff;box-shadow:0 12px 24px rgba(15,23,42,.18);font:500 11px/1.35 Roboto,sans-serif}.movies-tooltip strong{display:block;font:800 11px/1.3 Inter,sans-serif;margin-bottom:2px}.movies-table-wrap{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}.movies-table{width:100%;border-collapse:collapse;table-layout:fixed}.movies-table th,.movies-table td{padding:9px 9px;vertical-align:top;border-bottom:1px solid #e9edf3}.movies-table tr:last-child td{border-bottom:0}.movies-table thead th{background:#f8fafc;color:#111827;font:800 9px/1.16 Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase}.movies-table thead th:nth-child(1){width:15%}.movies-table thead th:nth-child(2){width:52%}.movies-table thead th:nth-child(3){width:33%}.movies-table td{font-size:10.6px;line-height:1.28;color:#374151}.movies-table td:nth-child(1){font:800 10px/1.24 Inter,sans-serif;color:#dc2626}.movies-table td:nth-child(3){text-align:right;font:800 10.2px/1.24 Inter,sans-serif;color:#111827}.movies-source{margin-top:auto;padding-top:7px;border-top:1px dashed var(--line);font-size:9.5px;line-height:1.22;color:#667085}
-    .concerts-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:14px;flex:1;min-height:0}.concerts-panel{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#fbfcff,#fff);padding:14px 14px 10px;display:flex;flex-direction:column;gap:10px;min-height:0}.concerts-chart-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}.concerts-sub{max-width:520px;font-size:10.5px;line-height:1.3;color:#4b5563}.concerts-kpi{border:1px solid var(--line);border-radius:12px;background:#fff;padding:9px 11px;min-width:118px}.concerts-kpi-num{font:800 22px/1 Inter,sans-serif;color:#dc2626}.concerts-kpi-lbl{margin-top:4px;font:800 10px/1.15 Inter,sans-serif;color:#6b7280;text-transform:uppercase;letter-spacing:.06em}.concerts-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:2px}.concerts-legend .legend-item{font-size:10.5px}.sw-concert-vn{background:#dc2626;height:8px}.sw-concert-non{background:#f59e0b;height:8px}.concerts-chart-wrap{display:flex;gap:10px;align-items:flex-end;height:334px}.concerts-left-axis{width:42px;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:22px;border-right:1px solid #dbe1e8;padding-right:6px;text-align:right;color:#8b95a3;font:700 10px Inter,sans-serif}.concerts-area{position:relative;flex:1;height:100%}.concerts-gridline{position:absolute;left:0;right:0;height:1px;background:#eef2f7}.concerts-bars{position:absolute;inset:0 0 22px 0;display:flex;align-items:flex-end;gap:4px}.concerts-bar-col{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%;position:relative}.concerts-stack{width:100%;max-width:24px;height:100%;display:flex;flex-direction:column-reverse;justify-content:flex-start;cursor:pointer}.concerts-seg{width:100%;box-shadow:0 4px 10px rgba(15,23,42,.06)}.concerts-seg.vn{background:linear-gradient(180deg,#fb7185,#dc2626);border-radius:0 0 7px 7px}.concerts-seg.non{background:linear-gradient(180deg,#fbbf24,#f59e0b);border-radius:7px 7px 0 0}.concerts-year-labels{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between}.concerts-year{flex:1;text-align:center;font:700 9px Inter,sans-serif;color:#6b7280}.concerts-note{margin-top:2px;padding-top:7px;border-top:1px dashed var(--line);font-size:10.5px;line-height:1.28;color:#4b5563}.concerts-tooltip{position:absolute;display:none;pointer-events:none;z-index:6;min-width:160px;max-width:210px;padding:8px 10px;border-radius:10px;background:rgba(17,24,39,.95);color:#fff;box-shadow:0 12px 24px rgba(15,23,42,.18);font:500 11px/1.35 Roboto,sans-serif}.concerts-tooltip strong{display:block;font:800 11px/1.3 Inter,sans-serif;margin-bottom:2px}.concerts-image-wrap{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;display:flex;flex-direction:column;min-height:0}.concerts-image-frame{position:relative;flex:1;min-height:286px;background:#f8fafc;display:flex;align-items:center;justify-content:center;overflow:hidden}.concerts-image-frame img{width:100%;height:100%;object-fit:cover;display:block}.concerts-image-frame.failed img{display:none}.concerts-image-fallback{display:none;padding:24px;text-align:center;font:800 22px/1.2 Inter,sans-serif;color:#475569;max-width:320px}.concerts-image-frame.failed .concerts-image-fallback{display:block}.concerts-caption{padding:10px 12px 0;font-size:11px;line-height:1.35;color:#374151}.concerts-credit{padding:6px 12px 0;font-size:9.4px;line-height:1.22;color:#667085}.concerts-source{margin-top:auto;padding-top:7px;border-top:1px dashed var(--line);font-size:9.5px;line-height:1.22;color:#667085}
-    .youtube-grid{display:grid;grid-template-columns:.94fr 1.06fr;gap:14px;flex:1;min-height:0}.youtube-panel{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#fbfcff,#fff);padding:14px 14px 10px;display:flex;flex-direction:column;gap:10px;min-height:0}.youtube-chart-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}.youtube-sub{max-width:520px;font-size:10.5px;line-height:1.3;color:#4b5563}.youtube-kpis{display:flex;gap:10px}.youtube-kpi{border:1px solid var(--line);border-radius:12px;background:#fff;padding:9px 11px;min-width:96px}.youtube-kpi-num{font:800 22px/1 Inter,sans-serif;color:#dc2626}.youtube-kpi-lbl{margin-top:4px;font:800 10px/1.15 Inter,sans-serif;color:#6b7280;text-transform:uppercase;letter-spacing:.06em}.youtube-chart-wrap{display:flex;gap:10px;align-items:flex-end;height:334px}.youtube-left-axis{width:42px;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:22px;border-right:1px solid #dbe1e8;padding-right:6px;text-align:right;color:#8b95a3;font:700 10px Inter,sans-serif}.youtube-area{position:relative;flex:1;height:100%}.youtube-gridline{position:absolute;left:0;right:0;height:1px;background:#eef2f7}.youtube-svg{position:absolute;inset:0 0 22px 0;width:100%;height:calc(100% - 22px);overflow:visible}.youtube-marker{position:absolute;bottom:0;transform:translateX(-50%);font:700 9px Inter,sans-serif;color:#6b7280;white-space:nowrap}.youtube-enddot{filter:drop-shadow(0 4px 8px rgba(220,38,38,.18))}.youtube-note{margin-top:2px;padding-top:7px;border-top:1px dashed var(--line);font-size:10.5px;line-height:1.28;color:#4b5563}.youtube-table-wrap{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;display:flex;flex-direction:column;min-height:0}.youtube-table-scroll{max-height:360px;overflow:auto}.youtube-table{width:100%;border-collapse:collapse;table-layout:fixed}.youtube-table th,.youtube-table td{padding:8px 9px;vertical-align:top;border-bottom:1px solid #e9edf3}.youtube-table tr:last-child td{border-bottom:0}.youtube-table thead th{background:#f8fafc;color:#111827;font:800 9px/1.16 Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase;position:sticky;top:0;z-index:1}.youtube-table thead th:nth-child(1){width:10%}.youtube-table thead th:nth-child(2){width:52%}.youtube-table thead th:nth-child(3){width:28%}.youtube-table thead th:nth-child(4){width:10%}.youtube-table td{font-size:10.3px;line-height:1.24;color:#374151}.youtube-table td:nth-child(1){font:800 10px/1.2 Inter,sans-serif;color:#dc2626}.youtube-tag{display:inline-flex;align-items:center;justify-content:center;padding:3px 6px;border-radius:999px;font:800 8.5px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase}.youtube-tag.vn{background:#fee2e2;color:#b91c1c}.youtube-tag.non{background:#e5e7eb;color:#475569}.youtube-source{margin-top:auto;padding-top:7px;border-top:1px dashed var(--line);font-size:9.5px;line-height:1.22;color:#667085}
-    .demand-conclusion{display:flex;flex-direction:column;gap:14px;flex:1;min-height:0}.conclusion-block-label{font:800 12px/1 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#dc2626;margin:0 0 -2px 2px}.conclusion-eras{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.conclusion-era-card{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#fbfcff,#fff);padding:12px 12px 10px;display:flex;flex-direction:column;gap:6px;min-height:120px}.conclusion-era-name{font:800 11px/1.15 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#111827}.conclusion-era-years{font:800 10px/1 Inter,sans-serif;color:#dc2626;letter-spacing:.08em;text-transform:uppercase}.conclusion-era-copy{font-size:10.6px;line-height:1.32;color:#4b5563}.conclusion-factors{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.conclusion-factor{border:1px solid var(--line);border-radius:20px;background:#fff;padding:14px 14px 12px;display:flex;flex-direction:column;gap:8px;min-height:170px}.conclusion-factor-name{font:800 12px/1.15 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#dc2626}.conclusion-factor-copy{font-size:11.2px;line-height:1.42;color:#374151}.conclusion-source{margin-top:auto;padding-top:8px;border-top:1px dashed var(--line);font-size:9.5px;line-height:1.22;color:#667085}
-    .preference-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;flex:1;min-height:0}.preference-card{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#fbfcff,#fff);padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;min-height:0}.preference-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.preference-name{font:800 18px/1.05 Inter,sans-serif;color:#111827;text-transform:uppercase}.preference-metric{display:inline-flex;align-items:center;padding:7px 10px;border-radius:999px;background:#fff4f4;border:1px solid #fecaca;color:#b91c1c;font:800 10px/1.15 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-align:center}.preference-headline{font:800 12px/1.2 Inter,sans-serif;color:#374151;text-transform:uppercase;letter-spacing:.05em}.preference-copy{font-size:12px;line-height:1.45;color:#374151}.preference-image{height:174px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#f8fafc;display:flex;align-items:center;justify-content:center}.preference-image img{width:100%;height:100%;object-fit:cover;display:block}.preference-image.failed img{display:none}.preference-image-fallback{display:none;padding:16px;text-align:center;font:800 22px/1.2 Inter,sans-serif;color:#64748b}.preference-image.failed .preference-image-fallback{display:block}.preference-credit{font-size:9.2px;line-height:1.2;color:#8a94a6;margin-top:-2px}.preference-balance{margin-top:auto;padding-top:8px;border-top:1px dashed var(--line);font-size:10.5px;line-height:1.28;color:#667085}
-    .supply-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:14px;flex:1;min-height:0}.supply-col{display:flex;flex-direction:column;gap:12px;min-height:0}.supply-card{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#fbfcff,#fff);padding:14px 16px 12px}.supply-card-title{font:800 12px/1.2 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#dc2626;margin-bottom:8px}.supply-copy{font-size:11.2px;line-height:1.42;color:#374151}.supply-list{margin:0;padding-left:18px;color:#374151;font-size:11px;line-height:1.42}.supply-list li+li{margin-top:6px}.supply-timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.supply-stage{border:1px solid var(--line);border-radius:18px;background:#fff;padding:12px 12px 10px;min-height:122px}.supply-stage-label{font:800 11px/1.15 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#111827}.supply-stage-years{font:800 10px/1 Inter,sans-serif;color:#dc2626;letter-spacing:.08em;text-transform:uppercase;margin-top:4px}.supply-stage-copy{font-size:10.6px;line-height:1.32;color:#4b5563;margin-top:7px}.supply-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.supply-kpi{border:1px solid var(--line);border-radius:18px;background:#fff;padding:12px 14px}.supply-kpi-num{font:800 26px/1 Inter,sans-serif;color:#dc2626}.supply-kpi-lbl{font:800 10px/1.2 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6b7280;margin-top:6px}.supply-kpi-note{font-size:9.5px;line-height:1.2;color:#8a94a6;margin-top:4px}.supply-highlight{border:1px solid #fecaca;border-radius:18px;background:#fff7f7;padding:14px 16px}.supply-highlight-num{font:800 30px/1 Inter,sans-serif;color:#dc2626}.supply-highlight-lbl{font:800 11px/1.2 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6b7280;margin-top:6px}.supply-highlight-note{font-size:10px;line-height:1.25;color:#8a94a6;margin-top:5px}.supply-source{margin-top:auto;padding-top:8px;border-top:1px dashed var(--line);font-size:9.5px;line-height:1.22;color:#667085}
-    .takeaway-banner{margin:-2px auto 12px;max-width:980px;text-align:center;font-size:14px;line-height:1.5;color:#374151}.takeaway-banner strong{color:#111827}.takeaway-banner .emph{color:#b86a64}
-    @media (max-width:1380px){.app{grid-template-columns:220px minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(220px,34vh);grid-template-areas:"sidebar work" "sidebar editor"}}
-    @media (max-width:1024px){body{overflow:auto}.app{height:auto;min-height:100vh;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"work" "sidebar" "editor";overflow:visible}.work,.pane{min-height:unset}.stage{min-height:420px}.list{max-height:240px}.form{max-height:320px}}
-  </style>
-</head>
-<body>
-  <div class="app">
-    <aside class="pane sidebar-pane"><div class="head"><h2>Deck Slides</h2><p>Slide-by-slide source of truth for the official deck.</p></div><div class="controls"><input id="search" placeholder="Search title, section, or notes"><select id="filter"><option value="all">All categories</option><option value="meta">Meta / divider</option><option value="summary">Summary</option><option value="demand">Demand</option><option value="supply">Supply</option><option value="balance">Balance</option></select></div><div id="list" class="list"></div></aside>
-    <main class="work"><div class="toolbar"><div class="group"><button id="prev" class="ghost">Previous</button><button id="next" class="ghost">Next</button><span id="status" class="pill">Seed loaded</span></div><div class="group"><button id="export" class="primary">Export CSV</button><button id="pdfAll" class="ghost">Export All PDF</button><button id="pdfPages" class="ghost">Export Pages PDF</button><button id="import" class="ghost">Import CSV</button><button id="reset" class="ghost">Reset Seed</button><input id="file" class="hidden" type="file" accept=".csv,text/csv"></div></div><section class="stage-wrap"><div class="stage-top"><span>Interactive Deck Workbench</span><span id="counter"></span></div><div id="stageViewport" class="stage"><div id="slideShell" class="slide-shell"><div id="slide" class="slide"></div></div></div></section></main>
-    <aside class="pane editor-pane"><div class="head"><h2>Slide Editor</h2><p>Edit the current slide here. Export CSV to save the latest browser state.</p></div><form id="form" class="form"></form></aside>
-  </div>
-  <script>
-    const STORAGE_KEY="vn-gaming-deck-workbench-v13",FIELDS=__FIELDS__,SEED=__SEED__;
-    let slides=[],filtered=[],currentId=null;
-    const HISTORY_TABS=[
-      {key:"console-button",title:"Console Button Era",years:"1990s"},
-      {key:"pc-internet",title:"PC & Internet Boom",years:"2000 - 2010"},
-      {key:"mobile-esports",title:"Mobile Shift & Esports",years:"2011 - 2020"},
-      {key:"digital-economy",title:"Digital Economy Era",years:"2021 - Present"},
-    ];
-    const formFields=[["slide_number","number"],["slide_type","select"],["part_number","text"],["category","select"],["part_name","text"],["section","text"],["subsection","text"],["title","textarea"],["purpose","textarea"],["evidence","textarea"],["visual","textarea"],["takeaway","textarea"],["status","text"],["owner","text"],["notes","textarea"]];
-    const opts={{slide_type:["cover","meta","agenda","divider","content"],category:["meta","summary","demand","supply","balance"]}};
-    const specialData=JSON.parse(__SPECIAL_DATA__);
-    const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-    const br=s=>esc(s).replace(/\\n/g,"<br>");
-    const fmtInt=n=>Math.round(n).toLocaleString();
-    const formatVndBn=n=>`${{(Number(n)/1000000000).toFixed(1)}} bn`;
-    function parseCsv(text){{let rows=[],lines=[],row=[],cur="",q=false;for(let i=0;i<text.length;i++){{const c=text[i],n=text[i+1];if(c=='"'){{if(q&&n=='"'){{cur+='"';i++;}}else q=!q;}}else if(c==","&&!q){{row.push(cur);cur="";}}else if((c=="\\n"||c=="\\r")&&!q){{if(c=="\\r"&&n=="\\n")i++;row.push(cur);cur="";lines.push(row);row=[];}}else cur+=c;}}if(cur.length||row.length){{row.push(cur);lines.push(row);}}const head=lines[0]||[];for(let i=1;i<lines.length;i++){{if(lines[i].every(v=>v===""))continue;let obj={{}};head.forEach((k,j)=>obj[k]=lines[i][j]??"");rows.push(obj);}}return rows;}}
-    function toCsv(rows){{const cell=v=>/[",\\n\\r]/.test(String(v??""))?'"'+String(v??"").replace(/"/g,'""')+'"':String(v??"");return [FIELDS.join(",")].concat(rows.map(r=>FIELDS.map(f=>cell(r[f]??"")).join(","))).join("\\n");}}
-    function withIds(rows){{return rows.map((r,i)=>({{...r,_id:r._id||`s-${i+1}-${r.slide_number||i+1}`}}));}}
-    function load(){{try{{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");if(Array.isArray(saved)&&saved.length)return saved;}}catch(e){{}}return withIds(parseCsv(SEED));}}
-    function save(){{localStorage.setItem(STORAGE_KEY,JSON.stringify(slides));}}
-    function catCls(c){{return ["meta","summary","demand","supply","balance"].includes(c)?c:"meta";}}
-    function current(){{return slides.find(s=>s._id===currentId)||slides[0];}}
-    function renderIncomeSlide(s){{const d=specialData[8],stage=document.getElementById("slide");const bars=d.years.map((year,i)=>{{const value=d.values[i],height=(value/d.maxY)*100,cls=i===d.values.length-1?"bar highlight":"bar";return `<div class="bar-col"><div class="${{cls}}" style="height:${{height}}%"><span class="bar-val">$${{Math.round(value).toLocaleString()}}</span></div><div class="bar-year">${{year}}</div></div>`;}}).join("");const benchMax=Math.max(...d.benchmarks.map(b=>b.cagr));const benches=d.benchmarks.map(b=>`<div class="bench-row"><div class="bench-name">${{b.name}}</div><div class="bench-track"><div class="bench-fill ${{b.highlight?"highlight":""}}" style="width:${{(b.cagr/benchMax)*100}}%">${{b.cagr.toFixed(2)}}%</div></div></div>`).join("");const grid=[0,1000,2000,3000,4000,5000].reverse().map((v,i)=>`<div class="gridline" style="top:${{(i/5)*100}}%"></div>`).join("");const yAxis=[5000,4000,3000,2000,1000,0].map(v=>`<span>$${{v/1000}}K</span>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="income-grid"><div class="income-panel soft"><div class="income-title">Viet Nam GDP per capita trend, 2015-2024</div><div class="trend-wrap"><div class="y-axis">${{yAxis}}</div><div class="trend-area">${{grid}}<div class="bars">${{bars}}</div></div></div><div class="bench-note"><strong>Source:</strong> World Bank.</div></div><div><div class="kpis"><div class="kpi"><div class="kpi-num">$${{Math.round(d.current).toLocaleString()}}</div><div class="kpi-lbl">2024 GDP per Capita</div></div><div class="kpi"><div class="kpi-num">${{d.cagr.toFixed(2)}}%</div><div class="kpi-lbl">2015-2024 CAGR</div></div></div><div class="income-panel"><div class="income-title">Regional benchmark CAGR</div><div class="bench">${{benches}}</div><div class="bench-note"><strong>Read-through:</strong> Viet Nam grew <strong>${{d.totalGrowth.toFixed(1)}}%</strong> from 2015 to 2024, faster than every peer shown. In 2024 it still trails Thailand and Malaysia and sits slightly below Indonesia.</div></div><div class="analysis-box"><div class="income-title">Detailed analysis</div><div class="custom-copy">Vietnam is not yet a high-income market, but the trajectory is strong.</div><div class="custom-copy bullet">For gaming, that steady and faster income growth supports improving room for discretionary spending over time.</div></div></div></div></div>`;}}
-    function linePath(values,maxY,width,height){{return values.map((v,i)=>{{const x=(values.length===1)?width/2:(i*(width/(values.length-1)));const y=height-((v/maxY)*height);return `${{i===0?'M':'L'}}${{x.toFixed(1)}},${{y.toFixed(1)}}`;}}).join(' ');}}
-    function lineDots(values,maxY,width,height,color){{return values.map((v,i)=>{{const x=(values.length===1)?width/2:(i*(width/(values.length-1)));const y=height-((v/maxY)*height);return `<circle cx="${{x.toFixed(1)}}" cy="${{y.toFixed(1)}}" r="3.5" fill="${{color}}" />`;}}).join('');}}
-    function linePathRange(values,minY,maxY,width,height){{const span=maxY-minY||1;return values.map((v,i)=>{{const x=(values.length===1)?width/2:(i*(width/(values.length-1)));const ratio=Math.max(0,Math.min(1,(v-minY)/span));const y=height-(ratio*height);return `${{i===0?'M':'L'}}${{x.toFixed(1)}},${{y.toFixed(1)}}`;}}).join(' ');}}
-    function pointXYRange(value,index,total,minY,maxY,width,height){{const span=maxY-minY||1;const x=(total===1)?width/2:(index*(width/(total-1)));const ratio=Math.max(0,Math.min(1,(value-minY)/span));const y=height-(ratio*height);return {{x,y}};}}
-    function renderEntertainmentDemandSlide(s){{const d=specialData[9],stage=document.getElementById("slide"),w=660,h=280;const grid=[0,100000,200000,300000,400000].reverse().map((v,i)=>`<div class="line-gridline" style="top:${{(i/4)*100}}%"></div>`).join("");const axis=[400000,300000,200000,100000,0].map(v=>`<span>${{v===0?'0':(v/1000).toFixed(0)+'K'}}</span>`).join("");const labels=d.years.map(y=>`<div class="line-year">${{y}}</div>`).join("");const infoPath=linePath(d.info,d.maxY,w,h),artsPath=linePath(d.arts,d.maxY,w,h);stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="line-grid"><div class="line-panel soft"><div class="income-title">Vietnam sector value trend, 2015-2024</div><div class="legend"><div class="legend-item"><span class="legend-swatch sw-blue"></span>Information & Communication</div><div class="legend-item"><span class="legend-swatch sw-gold"></span>Arts & Entertainment</div></div><div class="line-wrap"><div class="line-axis">${{axis}}</div><div class="line-area">${{grid}}<svg class="line-svg" viewBox="0 0 ${{w}} ${{h}}" preserveAspectRatio="none"><path d="${{infoPath}}" fill="none" stroke="#2563eb" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />${{lineDots(d.info,d.maxY,w,h,'#2563eb')}}<path d="${{artsPath}}" fill="none" stroke="#f59e0b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />${{lineDots(d.arts,d.maxY,w,h,'#f59e0b')}}</svg><div class="line-labels">${{labels}}</div></div></div><div class="line-note"><strong>Source:</strong> National Statistics Office of Vietnam.</div></div><div><div class="kpis"><div class="kpi"><div class="kpi-num">${{d.infoCagr.toFixed(2)}}%</div><div class="kpi-lbl">Info & Comm CAGR</div></div><div class="kpi"><div class="kpi-num">${{d.artsCagr.toFixed(2)}}%</div><div class="kpi-lbl">Arts & Entertainment CAGR</div></div></div><div class="analysis-box"><div class="income-title">Detailed analysis</div><div class="custom-copy">Information & Communication rises much faster than Arts & Entertainment and shows a structural step-up from 2021 onward. Arts & Entertainment grows more steadily from a smaller base, which helps confirm that the signal is not coming from only one category.</div><div class="custom-copy bullet">Together, these two trends support the view that Vietnamese spending on digital and entertainment-related services has been broadening over time, which likely benefits game demand as part of the wider digital entertainment basket.</div></div></div></div>`;}}
-    function renderDemographicsSlide(s){{const d=specialData[10],stage=document.getElementById("slide"),starred=new Set(["Roblox","Play Together"]);const rows=d.games.map(game=>{{const segs=d.buckets.map(bucket=>{{const value=game[`age${{bucket.key}}`];return `<div class="demo-seg seg${{bucket.key}}" style="width:${{value}}%"></div>`;}}).join("");const star=starred.has(game.name)?'<span class="demo-star">*</span>':'';return `<div class="demo-row"><div class="demo-game">${{esc(game.name)}}${{star}}<span class="demo-rev">$${{game.revenueM.toFixed(2)}}M</span></div><div class="demo-track">${{segs}}</div></div>`;}}).join("");const legend=d.buckets.map(bucket=>`<div class="legend-item"><span class="legend-swatch seg${{bucket.key}}"></span>${{bucket.label}}</div>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="demo-grid"><div class="demo-panel soft"><div class="income-title">Top 10 grossing mobile games, age-bucket split, 2025</div><div class="demo-legend">${{legend}}</div><div class="demo-axis"><div></div><div class="demo-ticks"><span>0%</span><span>25</span><span>50</span><span>75</span><span>100%</span></div></div><div class="demo-rows">${{rows}}</div><div class="demo-source"><strong>Source:</strong> SensorTower (Revenue-adjusted for Vietnam market; Demographics of SE_ASIA is used as proxy for VN and app variants are combined using average 2025 VN DAU weights)</div></div><div><div class="demo-kpis"><div class="demo-kpi"><div class="demo-kpi-num">${{d.portfolio.under35.toFixed(1)}}%</div><div class="demo-kpi-lbl">0-17 and 18-24 bucket share</div></div><div class="demo-kpi"><div class="demo-kpi-num">${{d.portfolio.age25.toFixed(1)}}%</div><div class="demo-kpi-lbl">18-24 bucket share</div></div></div><div class="analysis-box"><div class="income-title">Detailed analysis</div><div class="demo-note">Across the top 10 games, the <strong>18-24</strong> bucket is the single largest cohort in most titles, and the combined <strong>0-17 and 18-24</strong> share reaches roughly <strong>${{d.portfolio.under35.toFixed(1)}}%</strong> when app variants are combined using <strong>average 2025 Vietnam DAU</strong> weights.</div><div class="demo-note demo-bullet">Younger-skewing competitive titles such as <strong>Wild Rift</strong>, <strong>TFT</strong>, <strong>PUBG MOBILE</strong>, and <strong>Arena of Valor</strong> lean especially hard toward 18-24. By contrast, <strong>Coin Master</strong> shows much deeper <strong>35+</strong> audience presence.</div><div class="demo-note demo-bullet"><strong>Note:</strong> <strong>Play Together</strong> and <strong>Roblox</strong> show surprisingly large <strong>35+</strong> shares mainly because many younger players of these games do not have their own smartphones and instead play on their parents' devices.</div></div></div></div>`;}}
-    const pyramidState={{index:null,playing:false,timer:null}};
-    const fmtShort=n=>n>=1000000?`${{(n/1000000).toFixed(1)}}M`:Math.round(n).toLocaleString();
-    const fmtPeople=n=>Math.round(n).toLocaleString();
-    function stopPopulationPyramid(){{if(pyramidState.timer){{clearInterval(pyramidState.timer);pyramidState.timer=null;}}pyramidState.playing=false;}}
-    function ensurePopulationPyramidIndex(){{const d=specialData[11];if(pyramidState.index!==null)return;const idx=d.years.findIndex(item=>item.year===d.startYear);pyramidState.index=idx>=0?idx:0;}}
-    function stepPopulationPyramid(delta){{const d=specialData[11];stopPopulationPyramid();pyramidState.index=Math.max(0,Math.min(d.years.length-1,pyramidState.index+delta));renderPopulationPyramidBody();}}
-    function bindPopulationPyramidTooltip(){{const chart=document.getElementById("pyramidChart");const tooltip=document.getElementById("pyramidTooltip");if(!chart||!tooltip)return;chart.querySelectorAll(".pyramid-bar").forEach(bar=>{{bar.addEventListener("mousemove",e=>{{const age=bar.dataset.age||"";const sex=bar.dataset.sex||"";const value=bar.dataset.value||"";tooltip.innerHTML=`<strong>${{age}}</strong>${{sex}}: ${{value}} people`;tooltip.style.display="block";const rect=chart.getBoundingClientRect();const tooltipW=tooltip.offsetWidth||170;const tooltipH=tooltip.offsetHeight||54;const cursorX=(e.clientX||0)-rect.left;const cursorY=(e.clientY||0)-rect.top;let x=cursorX+18;let y=cursorY-tooltipH-14;if(x+tooltipW>rect.width-8)x=cursorX-tooltipW-18;if(x<8)x=8;if(y<8)y=cursorY+18;if(y+tooltipH>rect.height-8)y=Math.max(8,rect.height-tooltipH-8);tooltip.style.left=`${{x}}px`;tooltip.style.top=`${{y}}px`;}});bar.addEventListener("mouseleave",()=>{{tooltip.style.display="none";}});}});}}
-    function renderPopulationPyramidBody(){{const d=specialData[11],year=d.years[pyramidState.index];if(!year){{stopPopulationPyramid();return;}}const rows=[...year.groups].reverse().map(group=>`<div class="pyramid-row"><div class="pyramid-age">${{group.label}}</div><div class="pyramid-half"><div class="pyramid-bar male" data-age="${{group.label}}" data-sex="Male" data-value="${{fmtPeople(group.male)}}" title="${{group.label}} | Male: ${{fmtPeople(group.male)}}" style="width:${{(group.male/d.maxValue)*100}}%"></div></div><div class="pyramid-center"></div><div class="pyramid-half right"><div class="pyramid-bar female" data-age="${{group.label}}" data-sex="Female" data-value="${{fmtPeople(group.female)}}" title="${{group.label}} | Female: ${{fmtPeople(group.female)}}" style="width:${{(group.female/d.maxValue)*100}}%"></div></div></div>`).join("");const axisLabels=`<div class="pyramid-axis-side"><span>${{fmtShort(d.maxValue)}}</span><span>${{fmtShort(d.maxValue*0.5)}}</span></div><div></div><div class="pyramid-center-zero">0</div><div class="pyramid-axis-side"><span>${{fmtShort(d.maxValue*0.5)}}</span><span>${{fmtShort(d.maxValue)}}</span></div>`;const jumpButtons=d.quickYears.map(yr=>`<button class="pyramid-jump ${{yr===year.year?"active":""}}" data-year="${{yr}}">${{yr}}</button>`).join("");document.getElementById("pyramidYear").textContent=String(year.year);document.getElementById("pyramidPopulation").textContent=`Population: ${{year.population.toLocaleString()}}`;document.getElementById("pyramidMedianAge").textContent=`Median Age: ${{year.medianAge.toFixed(1)}} years`;document.getElementById("pyramidAxisHead").innerHTML=axisLabels;document.getElementById("pyramidRows").innerHTML=rows;document.getElementById("pyramidSlider").value=String(pyramidState.index);document.getElementById("pyramidSlider").style.setProperty("--progress",`${{(pyramidState.index/(d.years.length-1))*100}}%`);document.getElementById("pyramidJumpList").innerHTML=jumpButtons;const playBtn=document.getElementById("pyramidPlayBtn");playBtn.textContent=pyramidState.playing?"Pause Animation":"Play Animation";const backBtn=document.getElementById("pyramidPrevBtn"),nextBtn=document.getElementById("pyramidNextBtn");if(backBtn)backBtn.disabled=pyramidState.index===0;if(nextBtn)nextBtn.disabled=pyramidState.index===d.years.length-1;document.querySelectorAll(".pyramid-jump").forEach(btn=>btn.addEventListener("click",()=>{{const idx=d.years.findIndex(item=>item.year===Number(btn.dataset.year));if(idx>=0){{stopPopulationPyramid();pyramidState.index=idx;renderPopulationPyramidBody();}}}}));bindPopulationPyramidTooltip();}}
-    function togglePopulationPyramidPlay(){{const d=specialData[11];if(pyramidState.playing){{stopPopulationPyramid();renderPopulationPyramidBody();return;}}pyramidState.playing=true;renderPopulationPyramidBody();pyramidState.timer=setInterval(()=>{{if(!document.getElementById("pyramidRows")){{stopPopulationPyramid();return;}}if(pyramidState.index>=d.years.length-1){{stopPopulationPyramid();renderPopulationPyramidBody();return;}}pyramidState.index+=1;renderPopulationPyramidBody();}},450);}}
-    function renderPopulationPyramidSlide(s){{ensurePopulationPyramidIndex();const stage=document.getElementById("slide");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="pyramid-panel"><div class="pyramid-top"><div class="pyramid-sub">Watch how Vietnam's population structure evolved from 1950 to 2025.</div><div class="pyramid-summary"><div id="pyramidYear" class="pyramid-year"></div><div class="pyramid-metrics"><div id="pyramidPopulation"></div><div id="pyramidMedianAge"></div></div></div><div class="pyramid-legend"><div class="legend-item"><span class="legend-swatch sw-male"></span>Male</div><div class="legend-item"><span class="legend-swatch sw-female"></span>Female</div></div></div><div id="pyramidChart" class="pyramid-chart"><div id="pyramidAxisHead" class="pyramid-axis-head"></div><div id="pyramidRows" class="pyramid-rows"></div><div id="pyramidTooltip" class="pyramid-tooltip"></div></div><div class="pyramid-controls"><div class="pyramid-action"><button id="pyramidPrevBtn" class="pyramid-step" title="Previous year">◀</button><button id="pyramidPlayBtn" class="pyramid-play"></button><button id="pyramidNextBtn" class="pyramid-step" title="Next year">▶</button></div><div class="pyramid-slider-wrap"><div class="pyramid-end">1950</div><input id="pyramidSlider" class="pyramid-slider" type="range" min="0" max="${{specialData[11].years.length-1}}" step="1"><div class="pyramid-end">2025</div></div><div id="pyramidJumpList" class="pyramid-jumps"></div><div class="pyramid-foot"><strong>Source:</strong> PopulationPyramids.org / UN World Population Prospects 2024.</div></div></div></div>`;document.getElementById("pyramidPlayBtn").addEventListener("click",togglePopulationPyramidPlay);document.getElementById("pyramidPrevBtn").addEventListener("click",()=>stepPopulationPyramid(-1));document.getElementById("pyramidNextBtn").addEventListener("click",()=>stepPopulationPyramid(1));document.getElementById("pyramidSlider").addEventListener("input",e=>{{stopPopulationPyramid();pyramidState.index=Number(e.target.value);renderPopulationPyramidBody();}});renderPopulationPyramidBody();}}
-    function bindU25Tooltip(){{const area=document.getElementById("u25Area");const tooltip=document.getElementById("u25Tooltip");if(!area||!tooltip)return;area.querySelectorAll(".u25-hit").forEach(node=>{{node.addEventListener("mousemove",e=>{{const year=node.dataset.year||"";const people=node.dataset.people||"";const share=node.dataset.share||"";tooltip.innerHTML=`<strong>${{year}}</strong>Under-25 people: ${{people}}<br>Population share: ${{share}}`;tooltip.style.display="block";const rect=area.getBoundingClientRect();const tooltipW=tooltip.offsetWidth||176;const tooltipH=tooltip.offsetHeight||58;const cursorX=(e.clientX||0)-rect.left;const cursorY=(e.clientY||0)-rect.top;let x=cursorX+18;let y=cursorY-tooltipH-14;if(x+tooltipW>rect.width-8)x=cursorX-tooltipW-18;if(x<8)x=8;if(y<8)y=cursorY+18;if(y+tooltipH>rect.height-8)y=Math.max(8,rect.height-tooltipH-8);tooltip.style.left=`${{x}}px`;tooltip.style.top=`${{y}}px`;}});node.addEventListener("mouseleave",()=>{{tooltip.style.display="none";}});}});}}
-    function renderUnder25TrendSlide(s){{const d=specialData[12],stage=document.getElementById("slide"),w=930,h=274;const grid=[0,7000000,14000000,21000000,28000000,35000000,42000000].reverse().map((v,i)=>`<div class="u25-gridline" style="top:${{(i/6)*100}}%"></div>`).join("");const leftAxis=[42000000,35000000,28000000,21000000,14000000,7000000,0].map(v=>`<span>${{v===0?'0':(v/1000000).toFixed(0)+'M'}}</span>`).join("");const rightAxis=[65,60,55,50,45,40,35].map(v=>`<span>${{v}}%</span>`).join("");const barStep=w/d.years.length;const barW=Math.max(4,barStep-2);const bars=d.people.map((v,i)=>{{const x=i*barStep+(barStep-barW)/2;const y=h-((v/d.maxPeople)*h);const rh=(v/d.maxPeople)*h;const year=d.years[i];const peopleLabel=fmtInt(v);const shareLabel=`${{d.share[i].toFixed(1)}}%`;return `<rect class="u25-hit" data-year="${{year}}" data-people="${{peopleLabel}}" data-share="${{shareLabel}}" x="${{x.toFixed(1)}}" y="${{y.toFixed(1)}}" width="${{barW.toFixed(1)}}" height="${{rh.toFixed(1)}}" rx="2" fill="#7da4f7" fill-opacity="0.7"><title>${{year}} | Under-25 people: ${{peopleLabel}} | Share: ${{shareLabel}}</title></rect>`;}}).join("");const sharePath=linePath(d.share,d.maxShare,w,h);const shareDots=d.share.map((v,i)=>{{const x=(d.share.length===1)?w/2:(i*(w/(d.share.length-1)));const y=h-((v/d.maxShare)*h);const year=d.years[i];const peopleLabel=fmtInt(d.people[i]);const shareLabel=`${{v.toFixed(1)}}%`;return `<circle class="u25-hit" data-year="${{year}}" data-people="${{peopleLabel}}" data-share="${{shareLabel}}" cx="${{x.toFixed(1)}}" cy="${{y.toFixed(1)}}" r="4" fill="#ed1c24"><title>${{year}} | Under-25 people: ${{peopleLabel}} | Share: ${{shareLabel}}</title></circle>`;}}).join("");const labels=d.years.map((y,i)=>`<div class="u25-year">${{(y%5===0||i===d.years.length-1)?y:''}}</div>`).join("");const startPeople=(d.people[0]/1000000).toFixed(1),endPeople=(d.people[d.people.length-1]/1000000).toFixed(1),startShare=d.share[0].toFixed(1),endShare=d.share[d.share.length-1].toFixed(1);stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="u25-panel"><div class="u25-top"><div class="u25-legend"><div class="legend-item"><span class="legend-swatch sw-bar"></span>Under-25 people</div><div class="legend-item"><span class="legend-swatch sw-line"></span>Under-25 share of population</div></div><div class="u25-kpis"><div class="u25-kpi"><div class="u25-kpi-num">${{endPeople}}M</div><div class="u25-kpi-lbl">2025 under-25 people</div></div><div class="u25-kpi"><div class="u25-kpi-num">${{endShare}}%</div><div class="u25-kpi-lbl">2025 under-25 share</div></div></div></div><div class="u25-chart-wrap"><div class="u25-left-axis">${{leftAxis}}</div><div id="u25Area" class="u25-area">${{grid}}<svg class="u25-svg" viewBox="0 0 ${{w}} ${{h}}" preserveAspectRatio="none">${{bars}}<path d="${{sharePath}}" fill="none" stroke="#ed1c24" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />${{shareDots}}</svg><div id="u25Tooltip" class="u25-tooltip"></div><div class="u25-labels">${{labels}}</div></div><div class="u25-right-axis">${{rightAxis}}</div></div><div class="u25-note"><strong>Read-through:</strong> Vietnam's under-25 population rose from <strong>${{startPeople}}M</strong> in 1980 to <strong>${{endPeople}}M</strong> in 2025, but its share of population fell sharply from <strong>${{startShare}}%</strong> to <strong>${{endShare}}%</strong> as the country aged.</div><div class="u25-note"><strong>Source:</strong> PopulationPyramids.org / UN World Population Prospects 2024.</div></div></div>`;bindU25Tooltip();}}
-    function renderHardwareSlide(s){{const d=specialData[13],stage=document.getElementById("slide");const hero=d.headline.map(item=>`<div class="hardware-hero-card"><div class="hardware-hero-num">${{item.value}}</div><div class="hardware-hero-lbl">${{item.label}}</div><div class="hardware-hero-note">${{item.note}}</div></div>`).join("");const bars=d.bars.map(item=>`<div class="hardware-row"><div class="hardware-name">${{item.label}}<span class="hardware-row-note">${{item.note}}</span></div><div class="hardware-track"><div class="hardware-fill" style="width:${{Math.min(item.value,100)}}%"></div></div><div class="hardware-val">${{item.display}}</div></div>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{
-        esc(s.takeaway)
-    }}</div><div class="hardware-grid"><div class="hardware-panel soft"><div class="income-title">Mobile & internet access</div><div class="hardware-hero">${{hero}}</div><div class="hardware-bars">${{bars}}</div><div class="hardware-source"><strong>Read-through:</strong> National connectivity is already strong enough for mass-market mobile gaming. The main hardware question is no longer access to internet-capable devices, but what kinds of games those devices and networks can comfortably support.<br><strong>Source:</strong> ${{esc(d.source)}}</div></div><div class="hardware-side"><div class="hardware-kpis"><div class="hardware-kpi"><div class="hardware-kpi-num">${{d.pcUrban}}%</div><div class="hardware-kpi-lbl">urban respondents own a desktop or laptop</div></div><div class="hardware-kpi"><div class="hardware-kpi-num">${{d.consoleNiche}}</div><div class="hardware-kpi-lbl">console penetration remains niche</div></div></div><div class="analysis-box"><div class="income-title">Under-35 cue</div><div class="hardware-copy">${{esc(d.youngCue)}}</div></div><div class="analysis-box"><div class="income-title">PC still matters</div><div class="hardware-copy">${{esc(d.pcRead)}}</div></div><div class="analysis-box"><div class="income-title">Console remains niche</div><div class="hardware-copy">${{esc(d.consoleRead)}}</div></div></div></div></div>`;}}
-    function renderHistoryEraSlide(s){{const historyMap={"10":"14","11":"15","12":"16","13":"17"},d=specialData[historyMap[String(s.slide_number)]||String(s.slide_number)],stage=document.getElementById("slide");if(!d)return;const tabs=HISTORY_TABS.map(tab=>`<div class="history-era-tab ${{tab.key===d.era_key?"active":""}}"><span class="history-era-tab-title">${{tab.title}}</span><span class="history-era-tab-years">${{tab.years}}</span></div>`).join("");const milestones=d.milestones.map(item=>`<li>${{esc(item)}}</li>`).join("");const visual=d.image_url?`<div class="history-era-placeholder has-image"><img class="history-era-image" src="${{esc(d.image_url)}}" alt="${{esc(d.visual_label)}}" loading="eager" referrerpolicy="no-referrer" onerror="this.closest('.history-era-placeholder').classList.add('failed');this.remove()"><div class="history-era-placeholder-text">${{esc(d.visual_label)}}</div></div>`:`<div class="history-era-placeholder"><div class="history-era-placeholder-text">${{esc(d.visual_label)}}</div></div>`;const credit=d.image_credit?`<div class="history-era-placeholder-credit">${{esc(d.image_credit)}}</div>`:"";stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="history-era-layout"><div class="history-era-tabs">${{tabs}}</div><div class="history-era-main"><div class="history-era-visual"><div class="history-era-visual-top"><div class="history-era-chip">${{esc(d.era_title)}}</div><div class="history-era-visual-years">${{esc(d.years)}}</div></div>${{visual}}<div class="history-era-placeholder-note">${{esc(d.visual_note)}}</div>${{credit}}</div><div class="history-era-panel"><div class="history-era-panel-title">${{esc(d.era_title)}}</div><div class="history-era-summary">${{esc(d.summary)}}</div><div class="history-era-sections"><div class="history-era-box milestones"><div class="history-era-box-title">Key milestones</div><ul class="history-era-list">${{milestones}}</ul></div><div class="history-era-box culture"><div class="history-era-box-title">Gaming culture</div><div class="history-era-copy">${{esc(d.culture)}}</div></div><div class="history-era-box acceptance"><div class="history-era-box-title">Social acceptance</div><div class="history-era-copy">${{esc(d.acceptance)}}</div></div></div><div class="history-era-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div></div></div>`;}}
-    function renderHistorySummarySlide(s){{const d=specialData[18],stage=document.getElementById("slide");const headers=d.columns.map((col,i)=>`<th>${{i===0?esc(col):br(col)}}</th>`).join("");const rows=d.rows.map(row=>`<tr><td>${{esc(row.aspect)}}</td><td>${{esc(row.c1)}}</td><td>${{esc(row.c2)}}</td><td>${{esc(row.c3)}}</td><td>${{esc(row.c4)}}</td></tr>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="history-summary-panel"><div class="history-summary-head"><div class="income-title">Progression of gaming in Vietnam</div><div class="history-summary-sub">This table compares how gaming evolved across all four eras in culture, social acceptance, and the rise of Vietnamese game production.</div></div><div class="history-summary-table-wrap"><table class="history-summary-table"><thead><tr>${{headers}}</tr></thead><tbody>${{rows}}</tbody></table></div><div class="history-summary-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div>`;}}
-    function renderMacroBedrockSlide(s){{const d=specialData[19],stage=document.getElementById("slide");const headers=d.columns.map((col,i)=>`<th>${{i===0?br(col):br(col)}}</th>`).join("");const rows=d.rows.map(row=>`<tr><td>${{esc(row.aspect)}}</td><td>${{br(row.c1)}}</td><td>${{br(row.c2)}}</td><td>${{br(row.c3)}}</td><td>${{br(row.c4)}}</td></tr>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="macro-bedrock-panel"><div class="macro-bedrock-head"><div class="income-title">Macro foundations behind the gaming shift</div><div class="macro-bedrock-sub">These are the deeper structural changes beneath Vietnam's gaming history: the country accumulated skills, integrated culturally, and normalized digital spending across four distinct macro phases.</div></div><div class="macro-bedrock-table-wrap"><table class="macro-bedrock-table"><thead><tr>${{headers}}</tr></thead><tbody>${{rows}}</tbody></table></div><div class="macro-bedrock-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div>`;}}
-    function renderVietnamMoviesSlide(s){{const d=specialData[20],stage=document.getElementById("slide");const maxTotal=Math.max(...d.yearly_counts.map(x=>x.total));const ticks=[0,Math.ceil(maxTotal*.25),Math.ceil(maxTotal*.5),Math.ceil(maxTotal*.75),maxTotal];const bars=d.yearly_counts.map(item=>`<div class="movies-bar-col"><div class="movies-stack" data-year="${{item.year}}" data-vn="${{item.vietnamese}}" data-non="${{item.non_vietnamese}}" data-total="${{item.total}}"><div class="movies-seg vn" style="height:${{Math.max(item.vietnamese ? 6 : 0,(item.vietnamese/maxTotal)*100)}}%"></div><div class="movies-seg non" style="height:${{Math.max(item.non_vietnamese ? 6 : 0,(item.non_vietnamese/maxTotal)*100)}}%"></div><title>${{item.year}}: ${{item.vietnamese}} Vietnamese, ${{item.non_vietnamese}} non-Vietnamese movies</title></div></div>`).join("");const labels=d.yearly_counts.map(item=>`<div class="movies-year">${{item.year}}</div>`).join("");const rows=d.top_movies.map(item=>`<tr><td>${{item.release_year}}</td><td>${{esc(item.movie_name)}}</td><td>${{formatVndBn(item.revenue_vnd)}}</td></tr>`).join("");const peak=d.yearly_counts.reduce((a,b)=>a.vietnamese>b.vietnamese?a:b);stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="movies-grid"><div class="movies-panel"><div class="movies-chart-head"><div><div class="income-title">Movies released to cinemas in the sheet</div><div class="movies-sub">Stacked unique <code>movie_slug</code> counts by listing year from the merged Moveek + Box Office Vietnam cinema sheet.</div></div><div class="movies-kpi"><div class="movies-kpi-num">${{peak.vietnamese}}</div><div class="movies-kpi-lbl">peak VN yearly count</div></div></div><div class="movies-legend"><div class="legend-item"><span class="legend-swatch sw-movie-vn"></span>Vietnamese movies</div><div class="legend-item"><span class="legend-swatch sw-movie-non"></span>Non-Vietnamese movies</div></div><div class="movies-chart-wrap"><div class="movies-left-axis">${{ticks.slice().reverse().map(t=>`<span>${{t}}</span>`).join("")}}</div><div class="movies-area" id="moviesArea"><div class="movies-gridline" style="top:0%"></div><div class="movies-gridline" style="top:25%"></div><div class="movies-gridline" style="top:50%"></div><div class="movies-gridline" style="top:75%"></div><div class="movies-gridline" style="top:100%"></div><div class="movies-bars">${{bars}}</div><div class="movies-labels">${{labels}}</div><div class="movies-tooltip" id="moviesTooltip"></div></div></div><div class="movies-note"><strong>Read-through:</strong> International movies still dominate the cinema slate, but Vietnamese titles rose from <strong>4</strong> in <strong>2010</strong> to a peak of <strong>46</strong> in <strong>2025</strong>. We also increasingly see higher-grossing local releases entering the all-time box office conversation.</div></div><div class="movies-panel"><div class="history-summary-head"><div class="income-title">Top grossing Vietnamese movies in the sheet</div><div class="movies-sub">Ranked by <code>boxofficevietnam_total_revenue_vnd</code>. Revenue shown in <strong>VND bn</strong>.</div></div><div class="movies-table-wrap"><table class="movies-table"><thead><tr><th>Release year</th><th>Movie name</th><th>Revenue</th></tr></thead><tbody>${{rows}}</tbody></table></div><div class="movies-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div></div>`;const area=stage.querySelector('#moviesArea'),tooltip=stage.querySelector('#moviesTooltip');stage.querySelectorAll('.movies-stack').forEach(bar=>{{bar.addEventListener('mouseenter',()=>tooltip.style.display='block');bar.addEventListener('mouseleave',()=>tooltip.style.display='none');bar.addEventListener('mousemove',e=>{{const rect=area.getBoundingClientRect(),x=e.clientX-rect.left+12,y=e.clientY-rect.top-12;tooltip.innerHTML=`<strong>${{bar.dataset.year}}</strong>${{bar.dataset.vn}} Vietnamese movies<br>${{bar.dataset.non}} non-Vietnamese movies<br><strong>Total: ${{bar.dataset.total}}</strong>`;tooltip.style.left=`${{Math.min(Math.max(8,x),rect.width-185)}}px`;tooltip.style.top=`${{Math.max(8,y-50)}}px`;}});}});}}
-    function renderVietnamConcertsSlide(s){{const d=specialData[21],stage=document.getElementById("slide");const maxTotal=Math.max(...d.yearly_counts.map(x=>x.total));const ticks=[0,Math.ceil(maxTotal*.25),Math.ceil(maxTotal*.5),Math.ceil(maxTotal*.75),maxTotal];const peakLocal=d.yearly_counts.reduce((a,b)=>a.vietnamese>b.vietnamese?a:b);const bars=d.yearly_counts.map(item=>`<div class="concerts-bar-col"><div class="concerts-stack" data-year="${{item.year}}" data-vn="${{item.vietnamese}}" data-non="${{item.non_vietnamese}}" data-total="${{item.total}}"><div class="concerts-seg vn" style="height:${{Math.max(item.vietnamese ? 6 : 0,(item.vietnamese/maxTotal)*100)}}%"></div><div class="concerts-seg non" style="height:${{Math.max(item.non_vietnamese ? 6 : 0,(item.non_vietnamese/maxTotal)*100)}}%"></div><title>${{item.year}}: ${{item.vietnamese}} Vietnamese, ${{item.non_vietnamese}} non-Vietnamese concerts</title></div></div>`).join("");const labels=d.yearly_counts.map(item=>`<div class="concerts-year">${{item.year}}</div>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="concerts-grid"><div class="concerts-panel"><div class="concerts-chart-head"><div><div class="income-title">Concert counts in the sheet by country mix</div><div class="concerts-sub">Stacked bars from the concertarchives.org sheet. Vietnamese concerts are the lower red segment; non-Vietnamese concerts are the upper gold segment. 2026 is excluded as in-progress coverage.</div></div><div class="concerts-kpi"><div class="concerts-kpi-num">${{peakLocal.vietnamese}}</div><div class="concerts-kpi-lbl">peak VN yearly count</div></div></div><div class="concerts-legend"><div class="legend-item"><span class="legend-swatch sw-concert-vn"></span>Vietnamese concerts</div><div class="legend-item"><span class="legend-swatch sw-concert-non"></span>Non-Vietnamese concerts</div></div><div class="concerts-chart-wrap"><div class="concerts-left-axis">${{ticks.slice().reverse().map(t=>`<span>${{t}}</span>`).join("")}}</div><div class="concerts-area" id="concertsArea"><div class="concerts-gridline" style="top:0%"></div><div class="concerts-gridline" style="top:25%"></div><div class="concerts-gridline" style="top:50%"></div><div class="concerts-gridline" style="top:75%"></div><div class="concerts-gridline" style="top:100%"></div><div class="concerts-bars">${{bars}}</div><div class="concerts-year-labels">${{labels}}</div><div class="concerts-tooltip" id="concertsTooltip"></div></div></div><div class="concerts-note"><strong>Read-through:</strong> Foreign acts dominated the listed concert market for years, but Vietnamese concerts accelerated sharply after 2022 and reached <strong>48</strong> local concerts in <strong>2025</strong>, enough to overtake the <strong>35</strong> non-Vietnamese concerts captured in the same year.</div></div><div class="concerts-panel"><div class="history-summary-head"><div class="income-title">${{esc(d.image_title)}}</div><div class="concerts-sub">A representative visual for how local live entertainment now creates its own mass-market spectacle.</div></div><div class="concerts-image-wrap"><div class="concerts-image-frame" id="concertImageFrame"><img src="${{esc(d.image_url)}}" alt="Anh Trai Say Hi concert"><div class="concerts-image-fallback">Anh Trai Say Hi concert image</div></div><div class="concerts-caption">${{esc(d.image_caption)}}</div><div class="concerts-credit">${{esc(d.image_credit)}}</div></div><div class="concerts-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div></div>`;const area=stage.querySelector('#concertsArea'),tooltip=stage.querySelector('#concertsTooltip');stage.querySelectorAll('.concerts-stack').forEach(bar=>{{bar.addEventListener('mouseenter',()=>tooltip.style.display='block');bar.addEventListener('mouseleave',()=>tooltip.style.display='none');bar.addEventListener('mousemove',e=>{{const rect=area.getBoundingClientRect(),x=e.clientX-rect.left+12,y=e.clientY-rect.top-12;tooltip.innerHTML=`<strong>${{bar.dataset.year}}</strong>${{bar.dataset.vn}} Vietnamese concerts<br>${{bar.dataset.non}} non-Vietnamese concerts<br><strong>Total: ${{bar.dataset.total}}</strong>`;tooltip.style.left=`${{Math.min(Math.max(8,x),rect.width-190)}}px`;tooltip.style.top=`${{Math.max(8,y-50)}}px`;}});}});const img=stage.querySelector('#concertImageFrame img'),frame=stage.querySelector('#concertImageFrame');if(img&&frame){{img.addEventListener('error',()=>frame.classList.add('failed'),{{once:true}});if(img.complete&&img.naturalWidth===0)frame.classList.add('failed');}}}
-    function renderYoutubeVideosSlide(s){{const d=specialData[22],stage=document.getElementById("slide"),w=660,h=280,minY=40,maxY=100;const values=d.series.map(x=>x.pct);const path=linePathRange(values,minY,maxY,w,h);const end=pointXYRange(values[values.length-1],values.length-1,values.length,minY,maxY,w,h);const axis=[100,85,70,55,40].map(v=>`<span>${{v}}%</span>`).join("");const grid=[0,25,50,75,100].map(v=>`<div class="youtube-gridline" style="top:${{v}}%"></div>`).join("");const markers=d.markers.map(m=>`<span class="youtube-marker" style="left:${{((m.index/(d.series.length-1))*100).toFixed(2)}}%">${{esc(m.label)}}</span>`).join("");const rows=d.topVideos.map(item=>`<tr><td>${{item.rank}}</td><td>${{esc(item.title)}}<div class="note">${{fmtInt(item.viewCount)}} views</div></td><td>${{esc(item.channel)}}</td><td><span class="youtube-tag ${{item.isVietnamese?'vn':'non'}}">${{item.isVietnamese?'VN':'Non'}}</span></td></tr>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="youtube-grid"><div class="youtube-panel"><div class="youtube-chart-head"><div><div class="income-title">Daily % of Vietnamese videos in YouTube trending</div><div class="youtube-sub">Daily Vietnamese share from the VN trending sample, from <strong>2022-07-01</strong> to <strong>2025-06-30</strong>. This is intentionally granular to show how consistently local-language content remains the majority.</div></div><div class="youtube-kpis"><div class="youtube-kpi"><div class="youtube-kpi-num">${{d.latestPct.toFixed(1)}}%</div><div class="youtube-kpi-lbl">2025-06-30 share</div></div><div class="youtube-kpi"><div class="youtube-kpi-num">${{d.avgPct.toFixed(1)}}%</div><div class="youtube-kpi-lbl">period average</div></div></div></div><div class="youtube-chart-wrap"><div class="youtube-left-axis">${{axis}}</div><div class="youtube-area">${{grid}}<svg class="youtube-svg" viewBox="0 0 ${{w}} ${{h}}" preserveAspectRatio="none"><path d="${{path}}" fill="none" stroke="#dc2626" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /><circle class="youtube-enddot" cx="${{end.x.toFixed(1)}}" cy="${{end.y.toFixed(1)}}" r="4.5" fill="#dc2626" /></svg>${{markers}}</div></div><div class="youtube-note"><strong>Read-through:</strong> Vietnamese videos still dominate most days, but the trend is gradually softening: the average daily share is <strong>${{d.avgPct.toFixed(1)}}%</strong>, while the latest day in the sample sits at <strong>${{d.latestPct.toFixed(1)}}%</strong>, suggesting rising room for international content inside Vietnam's trending mix.</div></div><div class="youtube-panel"><div class="history-summary-head"><div class="income-title">Unique trending videos on 2025-06-30</div><div class="youtube-sub">${{d.dayUniqueVideos}} unique trending videos after deduplicating repeated captures within the day.</div></div><div class="youtube-table-wrap"><div class="youtube-table-scroll"><table class="youtube-table"><thead><tr><th>Rank</th><th>Video</th><th>Channel</th><th>VN?</th></tr></thead><tbody>${{rows}}</tbody></table></div></div><div class="youtube-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div></div>`;}}
-    function renderDemandConclusionSlide(s){{const d=specialData[23],stage=document.getElementById("slide");const eras=d.eras.map(item=>`<div class="conclusion-era-card"><div class="conclusion-era-name">${{esc(item.name)}}</div><div class="conclusion-era-years">${{esc(item.years)}}</div><div class="conclusion-era-copy">${{esc(item.summary)}}</div></div>`).join("");const factors=d.factors.map(item=>`<div class="conclusion-factor"><div class="conclusion-factor-name">${{esc(item.name)}}</div><div class="conclusion-factor-copy">${{esc(item.copy)}}</div></div>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="demand-conclusion"><div class="conclusion-block-label">The Trend</div><div class="conclusion-eras">${{eras}}</div><div class="conclusion-block-label">The Drivers</div><div class="conclusion-factors">${{factors}}</div><div class="conclusion-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div>`;}}
-    function renderPreferenceConclusionSlide(s){{const d=specialData[24],stage=document.getElementById("slide");const cards=d.cards.map(item=>`<div class="preference-card"><div class="preference-top"><div class="preference-name">${{esc(item.name)}}</div><div class="preference-metric">${{esc(item.metric)}}</div></div><div class="preference-headline">${{esc(item.headline)}}</div><div class="preference-copy">${{esc(item.copy)}}</div><div class="preference-image" data-name="${{esc(item.name)}}"><img src="${{esc(item.image_url)}}" alt="${{esc(item.name)}} image"><div class="preference-image-fallback">${{esc(item.name)}}</div></div><div class="preference-credit">${{esc(item.image_credit)}}</div><div class="preference-balance">${{item.name==='Movies'?'Higher-investment local storytelling is clearly scaling, even if imports still dominate total volume.':item.name==='Concerts'?'Large local live events now prove domestic fandom can mobilize at scale, not just react to foreign stars.':'The internet layer stays more globally contestable, so local advantage is weaker in lightweight daily attention formats.'}}</div></div>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge demand">demand</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="preference-grid">${{cards}}</div><div class="conclusion-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div>`;stage.querySelectorAll('.preference-image').forEach(frame=>{{const img=frame.querySelector('img');if(!img)return;img.addEventListener('error',()=>frame.classList.add('failed'),{{once:true}});if(img.complete&&img.naturalWidth===0)frame.classList.add('failed');}});}}
-    function renderSupplyPolicySlide(s){{const d=specialData[26],stage=document.getElementById("slide");const timeline=d.timeline.map(item=>`<div class="supply-stage"><div class="supply-stage-label">${{esc(item.label)}}</div><div class="supply-stage-years">${{esc(item.years)}}</div><div class="supply-stage-copy">${{esc(item.copy)}}</div></div>`).join("");const left=d.left_points.map(x=>`<li>${{esc(x)}}</li>`).join("");const right=d.right_points.map(x=>`<li>${{esc(x)}}</li>`).join("");const kpis=d.bottom_kpis.map(k=>`<div class="supply-kpi"><div class="supply-kpi-num">${{esc(k.value)}}</div><div class="supply-kpi-lbl">${{esc(k.label)}}</div></div>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge supply">supply</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="supply-col"><div class="supply-timeline">${{timeline}}</div><div class="supply-grid"><div class="supply-col"><div class="supply-card"><div class="supply-card-title">${{esc(d.left_title)}}</div><ul class="supply-list">${{left}}</ul></div></div><div class="supply-col"><div class="supply-card"><div class="supply-card-title">${{esc(d.right_title)}}</div><ul class="supply-list">${{right}}</ul></div></div></div><div class="supply-kpis">${{kpis}}</div><div class="supply-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div>`;}}
-    function renderSupplySupportSlide(s){{const d=specialData[27],stage=document.getElementById("slide");const direct=d.direct_support.map(x=>`<li>${{esc(x)}}</li>`).join("");const indirect=d.indirect_support.map(x=>`<li>${{esc(x)}}</li>`).join("");const talent=d.talent_pipeline.map(x=>`<li>${{esc(x)}}</li>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge supply">supply</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="supply-grid"><div class="supply-col"><div class="supply-card"><div class="supply-card-title">Direct support</div><ul class="supply-list">${{direct}}</ul></div><div class="supply-card"><div class="supply-card-title">Talent pipeline</div><ul class="supply-list">${{talent}}</ul></div></div><div class="supply-col"><div class="supply-highlight"><div class="supply-highlight-num">${{esc(d.highlight.value)}}</div><div class="supply-highlight-lbl">${{esc(d.highlight.label)}}</div><div class="supply-highlight-note">${{esc(d.highlight.note)}}</div></div><div class="supply-card"><div class="supply-card-title">Indirect support</div><ul class="supply-list">${{indirect}}</ul></div></div></div><div class="supply-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div>`;}}
-    function renderSupplyCapabilitySlide(s){{const d=specialData[28],stage=document.getElementById("slide");const evol=d.evolution.map(x=>`<div class="supply-stage"><div class="supply-stage-label">${{esc(x.phase)}}</div><div class="supply-stage-copy">${{esc(x.copy)}}</div></div>`).join("");const studios=d.studios.map(x=>`<li>${{esc(x)}}</li>`).join("");const kpis=d.kpis.map(k=>`<div class="supply-kpi"><div class="supply-kpi-num">${{esc(k.value)}}</div><div class="supply-kpi-lbl">${{esc(k.label)}}</div></div>`).join("");stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge supply">supply</div></div><div class="s-title">${{br(s.title)}}</div><div class="takeaway-banner"><strong>Take away:</strong> ${{esc(s.takeaway)}}</div><div class="supply-col"><div class="supply-timeline">${{evol}}</div><div class="supply-grid"><div class="supply-col"><div class="supply-card"><div class="supply-card-title">Flagship studio proof points</div><ul class="supply-list">${{studios}}</ul></div></div><div class="supply-col"><div class="supply-card"><div class="supply-card-title">What this means for sourcing</div><div class="supply-copy">Vietnam now has evidence of institutional training roots, scaled mobile publishing know-how, and an emerging premium-PC layer. The main caveat is that most of this capability is still built for export markets first, not for the domestic market by default.</div></div></div></div><div class="supply-kpis">${{kpis}}</div><div class="supply-source"><strong>Source:</strong> ${{esc(d.source)}}</div></div></div>`;}}
-    function fitSlide(){{const viewport=document.getElementById("stageViewport"),shell=document.getElementById("slideShell"),slide=document.getElementById("slide");if(!viewport||!shell||!slide)return;const availableW=Math.max(viewport.clientWidth-8,320),availableH=Math.max(viewport.clientHeight-8,240),scale=Math.min(availableW/1280,availableH/720,1);shell.style.width=`${{1280*scale}}px`;shell.style.height=`${{720*scale}}px`;slide.style.transform=`scale(${{scale}})`;}}
-    function buildForm(){{const form=document.getElementById("form");form.innerHTML=formFields.map(([name,type])=>{{const label=name.replaceAll("_"," ");if(type==="textarea")return `<div class="field"><label for="${{name}}">${{label}}</label><textarea id="${{name}}" name="${{name}}"></textarea></div>`;if(type==="select")return `<div class="field"><label for="${{name}}">${{label}}</label><select id="${{name}}" name="${{name}}">${{opts[name].map(v=>`<option value="${{v}}">${{v}}</option>`).join("")}}</select></div>`;return `<div class="field"><label for="${{name}}">${{label}}</label><input id="${{name}}" name="${{name}}" type="${{type}}"></div>`;}}).join("");form.insertAdjacentHTML("beforeend",'<div class="help">Tip: edit the CSV in Excel if you prefer table work, then re-import it here.</div>');form.addEventListener("input",updateFromForm);}}
-    function renderList(){{const q=document.getElementById("search").value.trim().toLowerCase(),f=document.getElementById("filter").value;filtered=slides.filter(s=>{{const hay=[s.title,s.section,s.subsection,s.part_name,s.notes,s.takeaway].join(" ").toLowerCase();return (!q||hay.includes(q))&&(f==="all"||s.category===f||(f==="meta"&&s.category==="meta"));}});if(!filtered.find(s=>s._id===currentId)&&filtered.length)currentId=filtered[0]._id;const list=document.getElementById("list");list.innerHTML=filtered.map(s=>`<div class="item ${{s._id===currentId?"active":""}}" data-id="${{s._id}}"><div class="i-top"><span>Slide ${{esc(s.slide_number)}}</span><span>${{esc(s.slide_type)}}</span></div><div class="i-title">${{esc(s.title||"(Untitled slide)")}}</div><div class="i-meta"><span>${{esc(s.section||s.part_name||"")}}</span><span class="badge ${{catCls(s.category)}}">${{esc(s.category||"meta")}}</span></div></div>`).join("");list.querySelectorAll(".item").forEach(el=>el.addEventListener("click",()=>{{currentId=el.dataset.id;syncForm();render();}}));}}
-    function renderStage(){{const s=current();if(!s)return;document.getElementById("counter").textContent=`Slide ${{s.slide_number}} of ${{slides.length}}`;document.getElementById("status").textContent=`Editing slide ${{s.slide_number}} | ${{s.status||"seed"}}`;const stage=document.getElementById("slide");if(String(s.slide_number)!=="7")stopPopulationPyramid();if(s.slide_type==="cover"){{stage.innerHTML=`<div class="body cover"><div class="mini">Official Deck Skeleton</div><div class="title">${{br(s.title)}}</div><div class="sub">Vietnam</div></div>`;return;}}if(s.slide_type==="divider"){{stage.innerHTML=`<div class="body divider"><div class="side">${{esc(s.part_name||"Section")}}</div><div class="part">Part ${{esc(s.part_number||"")}}</div><h1>${{br(s.title)}}</h1></div>`;return;}}if(String(s.slide_number)==="4"){{renderIncomeSlide(s);return;}}if(String(s.slide_number)==="5"){{renderEntertainmentDemandSlide(s);return;}}if(String(s.slide_number)==="6"){{renderDemographicsSlide(s);return;}}if(String(s.slide_number)==="7"){{renderPopulationPyramidSlide(s);return;}}if(String(s.slide_number)==="8"){{renderUnder25TrendSlide(s);return;}}if(String(s.slide_number)==="9"){{renderHardwareSlide(s);return;}}if(Number(s.slide_number)>=10&&Number(s.slide_number)<=13){{renderHistoryEraSlide(s);return;}}if(String(s.slide_number)==="14"){{renderHistorySummarySlide(s);return;}}if(String(s.slide_number)==="15"){{renderMacroBedrockSlide(s);return;}}if(String(s.slide_number)==="16"){{renderVietnamMoviesSlide(s);return;}}if(String(s.slide_number)==="17"){{renderVietnamConcertsSlide(s);return;}}if(String(s.slide_number)==="18"){{renderYoutubeVideosSlide(s);return;}}if(String(s.slide_number)==="19"){{renderDemandConclusionSlide(s);return;}}if(String(s.slide_number)==="20"){{renderPreferenceConclusionSlide(s);return;}}if(String(s.slide_number)==="21"){{renderSupplyPolicySlide(s);return;}}if(String(s.slide_number)==="22"){{renderSupplySupportSlide(s);return;}}if(String(s.slide_number)==="23"){{renderSupplyCapabilitySlide(s);return;}}stage.innerHTML=`<div class="body"><div class="eyebrow"><div class="path">${{esc(s.part_name||"")}}${{s.section?" > "+esc(s.section):""}}</div><div class="badge ${{catCls(s.category)}}">${{esc(s.category||s.slide_type)}}</div></div><div class="s-title">${{br(s.title)}}</div><div class="grid"><div class="stack"><div class="card soft"><div class="label">Objective / storyline</div><div class="copy">${{br(s.purpose)}}</div></div><div class="card"><div class="label">Evidence to insert</div><div class="copy">${{br(s.evidence)}}</div></div></div><div class="stack"><div class="card"><div class="label">Suggested visual</div><div class="copy">${{br(s.visual)}}</div></div><div class="card accent"><div class="label">Draft takeaway</div><div class="copy">${{br(s.takeaway)}}</div><div class="note">Status: ${{esc(s.status||"seed")}}${{s.owner?" | Owner: "+esc(s.owner):""}}</div></div></div></div></div>`;}}
-    function syncForm(){{const s=current(),form=document.getElementById("form");if(!s)return;FIELDS.forEach(f=>{{const el=form.elements.namedItem(f);if(el)el.value=s[f]??"";}});}}
-    function updateFromForm(){{const s=current(),form=document.getElementById("form");if(!s)return;FIELDS.forEach(f=>{{const el=form.elements.namedItem(f);if(el)s[f]=el.value;}});slides.sort((a,b)=>Number(a.slide_number)-Number(b.slide_number));save();render(false);}}
-    function render(sync=true){{renderList();renderStage();fitSlide();if(sync)syncForm();}}
-    function exportCsv(){{const rows=slides.map(s=>{{const o={{}};FIELDS.forEach(f=>o[f]=s[f]??"");return o;}});const blob=new Blob([toCsv(rows)],{{type:"text/csv;charset=utf-8;"}}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="vn_gaming_deck_working.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}}
-    function getOrderedSlides(){{return [...slides].sort((a,b)=>Number(a.slide_number)-Number(b.slide_number));}}
-    function parsePageSelection(input){{if(!input)return[];const maxSlide=slides.length,seen=new Set(),out=[];for(const raw of input.split(",")){{const part=raw.trim();if(!part)continue;const range=part.match(/^(\\d+)\\s*-\\s*(\\d+)$/);if(range){{let start=Number(range[1]),end=Number(range[2]);if(!Number.isFinite(start)||!Number.isFinite(end))return null;if(start>end){{const tmp=start;start=end;end=tmp;}}for(let n=start;n<=end;n++){{if(n<1||n>maxSlide)return null;if(!seen.has(n)){{seen.add(n);out.push(n);}}}}continue;}}const single=Number(part);if(!Number.isInteger(single)||single<1||single>maxSlide)return null;if(!seen.has(single)){{seen.add(single);out.push(single);}}}}return out.sort((a,b)=>a-b);}}
-    function collectPrintableSlides(selected){{const originalId=currentId,stage=document.getElementById("slide"),pages=[];stopPopulationPyramid();for(const s of selected){{currentId=s._id;renderStage();pages.push({{slide_number:s.slide_number,title:s.title,markup:stage.innerHTML}});}}currentId=originalId;render(false);return pages;}}
-    function openPdfExport(selected){{if(!selected.length)return;const pages=collectPrintableSlides(selected);const baseStyle=(document.querySelector("style")||{{textContent:""}}).textContent;const printStyle=`${{baseStyle}}\nhtml,body{margin:0;padding:0;background:#fff;font-family:Roboto,sans-serif;color:#171717;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important} *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;box-sizing:border-box} body{padding:0} .print-deck{display:block} .print-slide{position:relative;inset:auto;width:1280px;height:720px;margin:0;background:#fff!important;color:#171717;box-shadow:none;overflow:hidden;transform:none!important;break-after:page;page-break-after:always} .print-slide:last-child{break-after:auto;page-break-after:auto} .print-slide:after{content:\"\";position:absolute;left:0;right:0;bottom:0;height:12px;background:#ed1c24!important} .bar,.bar.highlight,.bench-fill,.bench-fill.highlight,.legend-swatch,.demo-seg,.pyramid-bar,.hardware-fill,.u25-hit,.sw-line,.sw-bar,.pyramid-center,.history-era-tab.active,.history-era-chip{forced-color-adjust:none!important} svg,svg *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important} @page{size:1280px 720px;margin:0;}`;const win=window.open("","_blank");if(!win){{window.alert("Please allow pop-ups so the PDF export window can open.");return;}}const cards=pages.map(page=>`<div class="print-slide">${{page.markup}}</div>`).join("");win.document.open();win.document.write(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>VN Gaming Deck PDF Export</title><style>${{printStyle}}</style></head><body><div class="print-deck">${{cards}}</div></body></html>`);win.document.close();win.focus();win.setTimeout(()=>win.print(),250);}}
-    function exportAllPdf(){{openPdfExport(getOrderedSlides());}}
-    function exportPagesPdf(){{const answer=window.prompt("Enter slide numbers or ranges to export as PDF. Example: 8,11-13","");if(answer===null)return;const pages=parsePageSelection(answer);if(!pages||!pages.length){{window.alert("Please enter valid slide numbers or ranges, such as 8 or 8,11-13.");return;}}const selected=getOrderedSlides().filter(s=>pages.includes(Number(s.slide_number)));openPdfExport(selected);}}
-    function importCsv(text){{const rows=withIds(parseCsv(text));if(!rows.length)return;slides=rows;currentId=slides[0]._id;save();render();}}
-    slides=withIds(load());currentId=slides[0] ? slides[0]._id : null;buildForm();render();
-    document.getElementById("search").addEventListener("input",()=>render(false));document.getElementById("filter").addEventListener("change",()=>render(false));
-    document.getElementById("prev").addEventListener("click",()=>{{const i=filtered.findIndex(s=>s._id===currentId);if(i>0){{currentId=filtered[i-1]._id;render();}}}});
-    document.getElementById("next").addEventListener("click",()=>{{const i=filtered.findIndex(s=>s._id===currentId);if(i>=0&&i<filtered.length-1){{currentId=filtered[i+1]._id;render();}}}});
-    document.getElementById("export").addEventListener("click",exportCsv);document.getElementById("pdfAll").addEventListener("click",exportAllPdf);document.getElementById("pdfPages").addEventListener("click",exportPagesPdf);document.getElementById("reset").addEventListener("click",()=>{{localStorage.removeItem(STORAGE_KEY);slides=withIds(parseCsv(SEED));currentId=slides[0]._id;save();render();}});
-    document.getElementById("import").addEventListener("click",()=>document.getElementById("file").click());document.getElementById("file").addEventListener("change",async e=>{{const file=e.target.files[0];if(!file)return;importCsv(await file.text());e.target.value="";}});
-    document.addEventListener("keydown",e=>{{if(e.target.closest("textarea,input,select"))return;if(e.key==="ArrowRight")document.getElementById("next").click();if(e.key==="ArrowLeft")document.getElementById("prev").click();}});
-    window.addEventListener("resize",fitSlide);
-  </script>
-</body>
-</html>"""
+HTML_TEMPLATE = (ROOT / "workbench_template.html").read_text(encoding="utf-8")
 
 
 def build_html(seed_csv):
@@ -809,3 +1102,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
